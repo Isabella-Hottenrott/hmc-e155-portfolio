@@ -1,0 +1,19 @@
+# Lab 4: Digital Audio
+
+### Introduction
+
+### Design and Testing Methodology
+
+### Technical Documentation
+
+### Block Diagram
+
+### Schematic
+
+### Results and Discussion
+
+### Testbench Simulation
+
+### Conclusion
+
+### AI Prototype Summary

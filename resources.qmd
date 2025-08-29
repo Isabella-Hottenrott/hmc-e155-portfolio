@@ -1,0 +1,6 @@
+---
+title: "Resources"
+---
+## Portfolio Resources
+- [E155 Course Website](https://hmc-e155.github.io/)
+- [E155 Github Repository](https://github.com/HMC-E155/hmc-e155)

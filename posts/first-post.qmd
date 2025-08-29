@@ -1,5 +1,5 @@
 ---
-title: "Hello Quarto"
+title: "Blog 0"
 description: "Welcome to my Quarto portfolio"
 author: "Bella Hottenrott"
 date: "8/28/25"
@@ -8,3 +8,7 @@ categories:
   - labreport
 draft: false
 ---
+
+I am excited to take E155 this semester. I remember seeing the seniors going to lab for this class when I was a freshman. Now I am in my final year and feel I have a strong enough engineering background to take this course. I am excited to challenge myself. Most of all, I am excited to build the resilience and debugging skills that this course develops.
+
+I found Lab 0 relatively easy. It allowed me to reflect on the Git, Linux, and Quarto familiarity that I've gained over the past year. I am not sure that I would have been able to set up this portfolio a year ago.

@@ -1,0 +1,20 @@
+# Lab 7: The Advanced Encryption Standard
+
+
+### Introduction
+
+### Design and Testing Methodology
+
+### Technical Documentation
+
+### Block Diagram
+
+### Schematic
+
+### Results and Discussion
+
+### Testbench Simulation
+
+### Conclusion
+
+### AI Prototype Summary

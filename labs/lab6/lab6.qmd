@@ -1,0 +1,20 @@
+# Lab 6: The Internet of Things and Serial Peripheral Interface
+
+
+### Introduction
+
+### Design and Testing Methodology
+
+### Technical Documentation
+
+### Block Diagram
+
+### Schematic
+
+### Results and Discussion
+
+### Testbench Simulation
+
+### Conclusion
+
+### AI Prototype Summary

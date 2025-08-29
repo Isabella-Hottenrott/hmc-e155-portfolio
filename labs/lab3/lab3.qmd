@@ -1,0 +1,20 @@
+# Lab 3: Keypad Scanner
+
+
+### Introduction
+
+### Design and Testing Methodology
+
+### Technical Documentation
+
+### Block Diagram
+
+### Schematic
+
+### Results and Discussion
+
+### Testbench Simulation
+
+### Conclusion
+
+### AI Prototype Summary
