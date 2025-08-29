@@ -1,0 +1,142 @@
+[
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "E155 Blog",
+    "section": "",
+    "text": "Isabella’s Blog Page\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBlog 0\n\n\nWelcome to my Quarto portfolio\n\n\n\n\n\nAug 28, 2025\n\n\nBella Hottenrott\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "E155 Portfolio",
+    "section": "",
+    "text": "Bella Hottenrott is a senior Engineering major at Harvey Mudd College. Her background lies in electrical, computer, and controls engineering. Over the weekends, she and her friends like to go surfing, hiking, and exploring in LA. When she has time to herself, she is almost certainly listening to a podcast, on a run, or making herself a coffee."
+  },
+  {
+    "objectID": "labs/lab4/lab4.html",
+    "href": "labs/lab4/lab4.html",
+    "title": "Lab 4: Digital Audio",
+    "section": "",
+    "text": "Lab 4: Digital Audio\n\nIntroduction\n\n\nDesign and Testing Methodology\n\n\nTechnical Documentation\n\n\nBlock Diagram\n\n\nSchematic\n\n\nResults and Discussion\n\n\nTestbench Simulation\n\n\nConclusion\n\n\nAI Prototype Summary"
+  },
+  {
+    "objectID": "labs/lab2/lab2.html",
+    "href": "labs/lab2/lab2.html",
+    "title": "Lab 2: Multiplexed 7-Segment Display",
+    "section": "",
+    "text": "Lab 2: Multiplexed 7-Segment Display\n\nIntroduction\n\n\nDesign and Testing Methodology\n\n\nTechnical Documentation\n\n\nBlock Diagram\n\n\nSchematic\n\n\nResults and Discussion\n\n\nTestbench Simulation\n\n\nConclusion\n\n\nAI Prototype Summary"
+  },
+  {
+    "objectID": "labs/labs.html",
+    "href": "labs/labs.html",
+    "title": "E155 Labs",
+    "section": "",
+    "text": "Lab 1: FPGA and MCU Setup and Testing"
+  },
+  {
+    "objectID": "labs/labs.html#lab-1",
+    "href": "labs/labs.html#lab-1",
+    "title": "E155 Labs",
+    "section": "",
+    "text": "Lab 1: FPGA and MCU Setup and Testing"
+  },
+  {
+    "objectID": "labs/labs.html#lab-2",
+    "href": "labs/labs.html#lab-2",
+    "title": "E155 Labs",
+    "section": "Lab 2",
+    "text": "Lab 2\nLab 2: Multiplexed 7-Segment Display"
+  },
+  {
+    "objectID": "labs/labs.html#lab-3",
+    "href": "labs/labs.html#lab-3",
+    "title": "E155 Labs",
+    "section": "Lab 3",
+    "text": "Lab 3\nLab 3: Keypad Scanner"
+  },
+  {
+    "objectID": "labs/labs.html#lab-4",
+    "href": "labs/labs.html#lab-4",
+    "title": "E155 Labs",
+    "section": "Lab 4",
+    "text": "Lab 4\nLab 4: Digital Audio"
+  },
+  {
+    "objectID": "labs/labs.html#lab-5",
+    "href": "labs/labs.html#lab-5",
+    "title": "E155 Labs",
+    "section": "Lab 5",
+    "text": "Lab 5\nLab 5: Interrupts"
+  },
+  {
+    "objectID": "labs/labs.html#lab-6",
+    "href": "labs/labs.html#lab-6",
+    "title": "E155 Labs",
+    "section": "Lab 6",
+    "text": "Lab 6\nLab 6: The Internet of Things and Serial Peripheral Interface"
+  },
+  {
+    "objectID": "labs/labs.html#lab-7",
+    "href": "labs/labs.html#lab-7",
+    "title": "E155 Labs",
+    "section": "Lab 7",
+    "text": "Lab 7\nLab 7: The Advanced Encryption Standard"
+  },
+  {
+    "objectID": "labs/lab6/lab6.html",
+    "href": "labs/lab6/lab6.html",
+    "title": "Lab 6: The Internet of Things and Serial Peripheral Interface",
+    "section": "",
+    "text": "Lab 6: The Internet of Things and Serial Peripheral Interface\n\nIntroduction\n\n\nDesign and Testing Methodology\n\n\nTechnical Documentation\n\n\nBlock Diagram\n\n\nSchematic\n\n\nResults and Discussion\n\n\nTestbench Simulation\n\n\nConclusion\n\n\nAI Prototype Summary"
+  },
+  {
+    "objectID": "labs/lab1/lab1.html",
+    "href": "labs/lab1/lab1.html",
+    "title": "Lab 1: FPGA and MCU Setup and Testing",
+    "section": "",
+    "text": "Lab 1: FPGA and MCU Setup and Testing\n\nIntroduction\n\n\nDesign and Testing Methodology\n\n\nTechnical Documentation\n\n\nBlock Diagram\n\n\nSchematic\n\n\nResults and Discussion\n\n\nTestbench Simulation\n\n\nConclusion\n\n\nAI Prototype Summary"
+  },
+  {
+    "objectID": "labs/lab7/lab7.html",
+    "href": "labs/lab7/lab7.html",
+    "title": "Lab 7: The Advanced Encryption Standard",
+    "section": "",
+    "text": "Lab 7: The Advanced Encryption Standard\n\nIntroduction\n\n\nDesign and Testing Methodology\n\n\nTechnical Documentation\n\n\nBlock Diagram\n\n\nSchematic\n\n\nResults and Discussion\n\n\nTestbench Simulation\n\n\nConclusion\n\n\nAI Prototype Summary"
+  },
+  {
+    "objectID": "labs/lab5/lab5.html",
+    "href": "labs/lab5/lab5.html",
+    "title": "Lab 5: Interrupts",
+    "section": "",
+    "text": "Lab 5: Interrupts\n\nIntroduction\n\n\nDesign and Testing Methodology\n\n\nTechnical Documentation\n\n\nBlock Diagram\n\n\nSchematic\n\n\nResults and Discussion\n\n\nTestbench Simulation\n\n\nConclusion\n\n\nAI Prototype Summary"
+  },
+  {
+    "objectID": "labs/lab3/lab3.html",
+    "href": "labs/lab3/lab3.html",
+    "title": "Lab 3: Keypad Scanner",
+    "section": "",
+    "text": "Lab 3: Keypad Scanner\n\nIntroduction\n\n\nDesign and Testing Methodology\n\n\nTechnical Documentation\n\n\nBlock Diagram\n\n\nSchematic\n\n\nResults and Discussion\n\n\nTestbench Simulation\n\n\nConclusion\n\n\nAI Prototype Summary"
+  },
+  {
+    "objectID": "posts/first-post.html",
+    "href": "posts/first-post.html",
+    "title": "Blog 0",
+    "section": "",
+    "text": "I am excited to take E155 this semester. I remember seeing the seniors going to lab for this class when I was a freshman. Now I am in my final year and feel I have a strong enough engineering background to take this course. I am excited to challenge myself. Most of all, I am excited to build the resilience and debugging skills that this course develops.\nI found Lab 0 relatively easy. It allowed me to reflect on the Git, Linux, and Quarto familiarity that I’ve gained over the past year. I am not sure that I would have been able to set up this portfolio a year ago."
+  },
+  {
+    "objectID": "resources.html",
+    "href": "resources.html",
+    "title": "Resources",
+    "section": "",
+    "text": "E155 Course Website\nE155 Github Repository"
+  },
+  {
+    "objectID": "resources.html#portfolio-resources",
+    "href": "resources.html#portfolio-resources",
+    "title": "Resources",
+    "section": "",
+    "text": "E155 Course Website\nE155 Github Repository"
+  }
+]
