@@ -1,0 +1,20 @@
+---
+title: "E155 Portfolio"
+image: images/headshot.jpeg
+about:
+    template: jolla
+    links:
+        - icon: linkedin
+          text: LinkedIn
+          href: https://www.linkedin.com/in/isabella-hottenrott-ba6200259/
+        - icon: github
+          text: Github
+          href: https://github.com/Isabella-Hottenrott
+
+---
+
+Bella Hottenrott is a senior Engineering major at Harvey Mudd College. Her background lies in electrical, computer, and controls engineering.
+Over the weekends, she and her friends like to go surfing, hiking, and exploring in LA. When she has time to herself, she is almost certainly listening to a podcast, on a run, or making herself a coffee.
+
+
+
