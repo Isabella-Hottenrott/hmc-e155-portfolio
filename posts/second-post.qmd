@@ -1,0 +1,22 @@
+---
+title: "Blog 1"
+description: "Reflections on Lab 1"
+author: "Bella Hottenrott"
+date: "9/4/25"
+categories:
+  - reflection
+  - labreport
+draft: false
+---
+
+As of today, I have completed my first MicroPs lab. Overall, I did not think that the tasks were too challenging. I have PCB assembly experience from my summer internship, and very quickly understood what was needed to be done on the FPGA. That said, I ended up spending around twenty hours working. I did not anticipate some issues, such as missing components and the fact that the software took a very long time to load. However, I learned many lessons about what I will not allow myself to do in the future.
+
+Lesson 1- 
+I was quite absent-minded when configuring my project. I accidentally created a Verilog file instead of a SystemVerilog file, which caused syntax errors and took me around an hour to discover. I also gave my files/modules undescriptive names twice in a row. In order to rename the files, while making sure the whole project/file tree stayed consistent, I had to start a new project. This involved a lot of time wasted waiting for Radiant to power up. I would also often close the Programmer after being thrown the J-Link issue, even though this wasn't necessary. This meant that I would have to wait for the Programmer to open almost every time I tried to reprogram the FPGA, which always took a while.
+
+
+Lesson 2- 
+Having my check off on Thursday meant that I was working at a slower and less efficient pace than my peers in lab, because I didn't have the stress of a near upcoming assignment. I think I spent more time in lab than was necessary, not doing efficient work. As a result, the two nights before my Thursday check-in were longer nights for me.
+
+
+I do not feel positively toward how I managed my time and brain resources on this first lab. However, I am foremost taking this as a learning experience. I am happy this happened to me now and made me realize I have to get into shape before more difficult labs come along.
