@@ -3,11 +3,34 @@
 
 ### Introduction
 
+In this lab, a design was implemented on the UPduino v3.1 FPGA that time-multiplexed between two seven-segment displays. The design utilized only one set of GPIO pins, and only one seven segment module. The time multiplexing occured at a fast enough rate that switching between segments was not discernable to the human eye.
+
 ### Design and Testing Methodology
+The iCE40 UltraPlus HSOSC primitive was used to generate a clock signal, which was stepped down to an internal 60 Hz signal that the design responded to. At this frequency, the human eye can no longer percieve refresh rates. This frequency also ensured that bleeding did not occur between the two segments.
+
+An 8-pin dip switch controls the HDSP-521A Dual Seven Segment Display, where the first four switches correspond to the first segment, and final four correspond to the second. When the internal clock is low, the input from the first four switches is selected, and when the clock is high, the input from the final four are selected.
+
+At the same time, when the clock is low, a signal is sent to drive the common anode of the first segment. When the clock is high, a separate signal drives the common anode of the second segment.
+
+The sum of the two hex values on the HDSP-521A Display is represented in binary on the on-board LEDs of the E155 Development Board.
+
+The Lab 1 Seven Segment Display module- a priority encoder- was used to convert the desired switch inputs into an output hex digit. The HDSP521A required a larger current draw ... PUT IN CURRENT AMOUNT... than the FPGA can output. To overcome this, two 2N3906 PNP transistors drove ... HOW MUCH CURRENT .. of current into the respective segments' anodes. 1 kΩ were placed at the cathodes of the diodes to ensure this current pull. An ON segment produced a voltage drop of 3.3V (FPGA) - 1.95V (Vf) = 1.35V across the pins and segments. Calcualtions for the resistors can be found below.
+
+To control the input to the Seven Segment Display, a priority encoder was used. The output signals were mapped to their respective pins on the input of the HDSP-511A Seven Segment Display. 3.3V were applied to the common anode of the display. 
+To turn a segment ON, the respective GPIO pin was grounded, producing a 3.3V drop across the segment's anode. The forward voltage of the segments' diodes is 1.95V. The current flowing through the diode was chosen to be 1mA. Therefore the value of the current limiting resistor placed in series between the cathode and GPIO pin was 1 kΩ. Calculations for this component value can be found below.
+
+A 480 Ω resistor was placed between the base of the PNP transistor and the GPIO pin to limit the current draw. Calculations for this component value can be found below. 
 
 ### Technical Documentation
 
+The source code for Lab 2 can be found in the following [GitHub repository](https://github.com/Isabella-Hottenrott/e155-lab2).
+
 ### Block Diagram
+
+![Figure 2: Block Diagram of the lab1_ih verilog design](images/blockdiagram.png){width=60% fig-align="center"}
+
+The block diagram above illustrates the lab2_ih design. The top level module is called lab2_ih and takes the input ... WHATARE THE INPUTS, communicating with the GPIO pins. Lab1_ih includes five submodules: the high-speed oscillator block (hf_osc), the seven segments priority encoder (segments), the adder (adder), the anode-selecting module (anodeselect), and the clock divider to 60 Hz (clock_div).
+
 
 ### Schematic
 
