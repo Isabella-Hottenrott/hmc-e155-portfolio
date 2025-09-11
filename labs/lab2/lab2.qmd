@@ -11,9 +11,9 @@ An 8-pin dip switch controls the HDSP-521A Dual Seven Segment Display, where the
 
 At the same time, when the clock is low, a signal is sent to drive the common anode of the first segment. When the clock is high, a separate signal drives the common anode of the second segment.
 
-The sum of the two hex values on the HDSP-521A Display is represented in binary on the on-board LEDs of the E155 Development Board. These are in series with 1 kΩ resistors to limit current. 
+The sum of the two hex values on the HDSP-521A Display is represented in binary on the on-board LEDs of the E155 Development Board. These diodes are in series with 1 kΩ resistors to limit current. 
 
-The Seven Segment Display module- a priority encoder- was used to convert the desired switch inputs into an output hex digit. The HDSP521A required a larger current draw than the FPGA can output. To overcome this, two 2N3906 PNP transistors drove the saturation current of !!!10 mA!!! into the respective segments' anodes. !!!1 kΩ!!! were placed at the cathodes of the diodes to ensure this current pull. An ON segment produced a voltage drop of 3.3V (FPGA) - 1.85V (Vf) - 0.25V (Vce)= 1.2V across the pins and segments. The current flowing through the diode was chosen to be 1mA. Therefore the value of the current limiting resistor placed in series between the cathode and GPIO pin was 1 kΩ. Calculations for this component value can be found below. Calcualtions for the resistors can be found below. 
+The Seven Segment Display module- a priority encoder- was used to convert the desired switch inputs into an output hex digit. The HDSP521A required a larger current draw than the FPGA can output, which was addressed by two 2N3906 PNP transistors. 330 Ω were placed at the cathodes of the diodes to ensure a 10mA current pull, over the (3.3 V - 0.25 Vce) = 3.05 V drop, through the segment when ON. Calculations for the current limiting resistor placed in series between the cathode and GPIO pin can be found below. 
 
 
 ![Figure 0: Resistor Calculation](images/resistor.png){width=40% fig-align="center"}
@@ -38,7 +38,7 @@ The block diagram above illustrates the lab2_ih design. The top level module is 
 
 ### Schematic
 
-The schematic above illustrates the physical layout on the breadboard. Corresponding diode cathodes from the seven segment displays were the same node (segment 1 A is the same node as segment 2 A, etc). These were connected in series with a 1 kΩ current-limiting resistor to the GPIO pins. The on-board LEDs required 1 kΩ resistors to their limit current. The emitter of the transistor is powered by 3.3 V, while the collector goes straight to the segment anodes. The base of the PNP transistor is in series with a 460Ω resistor such that less than 5mA of current is drawn from the GPIO pin, which lies within specs.
+The schematic above illustrates the physical layout on the breadboard. Corresponding diode cathodes from the seven segment displays were the same node (segment 1 A is the same node as segment 2 A, etc). These were connected in series with a 330 Ω current-limiting resistor to the GPIO pins. The on-board LEDs required 1 kΩ resistors to their limit current. The emitter of the transistor is powered by 3.3 V, while the collector goes straight to the segment anodes. The base of the PNP transistor is in series with a 460Ω resistor such that less than 5mA of current is drawn from the GPIO pin, which lies within specs.
 ![Figure 3: Schematic of the Breadboard](images/schematic.png){fig-align="center"}
 
 ### Results and Discussion
