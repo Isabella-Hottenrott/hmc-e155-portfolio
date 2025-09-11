@@ -13,7 +13,7 @@ At the same time, when the clock is low, a signal is sent to drive the common an
 
 The sum of the two hex values on the HDSP-521A Display is represented in binary on the on-board LEDs of the E155 Development Board. These diodes are in series with 1 kΩ resistors to limit current. 
 
-The Seven Segment Display module- a priority encoder- was used to convert the desired switch inputs into an output hex digit. The HDSP521A required a larger current draw than the FPGA can output, which was addressed by two 2N3906 PNP transistors. 330 Ω resistors were placed at the cathodes of the diodes to ensure a 3 mA current pull through the segment, over the (3.3 V - 0.25 Vce -1.95 Vf) = 1.1 V drop, when ON. Calculations for the current limiting resistors between the cathodes and GPIO pins can be found below. 
+The Seven Segment Display module- a priority encoder- was used to convert the desired switch inputs into an output hex digit. The HDSP521A required a larger current draw than the FPGA can output, which was addressed by two 2N3906 PNP transistors. 330 Ω resistors were placed at the cathodes of the diodes to ensure a 3 mA current pull through the segment, over the (3.3 V - 0.25 Vce -1.85 Vf) = 1.2 V drop, when ON. Calculations for the current limiting resistors between the cathodes and GPIO pins can be found below. 
 
 
 ![Figure 0: Resistor Calculation](images/resistor.png){width=40% fig-align="center"}
