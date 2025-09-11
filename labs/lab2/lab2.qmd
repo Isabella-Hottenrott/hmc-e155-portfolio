@@ -13,12 +13,12 @@ At the same time, when the clock is low, a signal is sent to drive the common an
 
 The sum of the two hex values on the HDSP-521A Display is represented in binary on the on-board LEDs of the E155 Development Board. These diodes are in series with 1 kΩ resistors to limit current. 
 
-The Seven Segment Display module- a priority encoder- was used to convert the desired switch inputs into an output hex digit. The HDSP521A required a larger current draw than the FPGA can output, which was addressed by two 2N3906 PNP transistors. 330 Ω were placed at the cathodes of the diodes to ensure a 10mA current pull, over the (3.3 V - 0.25 Vce) = 3.05 V drop, through the segment when ON. Calculations for the current limiting resistor placed in series between the cathode and GPIO pin can be found below. 
+The Seven Segment Display module- a priority encoder- was used to convert the desired switch inputs into an output hex digit. The HDSP521A required a larger current draw than the FPGA can output, which was addressed by two 2N3906 PNP transistors. 330 Ω resistors were placed at the cathodes of the diodes to ensure a 10mA current pull through the segment, over the (3.3 V - 0.25 Vce) = 3.05 V drop, when ON. Calculations for the current limiting resistors between the cathodes and GPIO pins can be found below. 
 
 
 ![Figure 0: Resistor Calculation](images/resistor.png){width=40% fig-align="center"}
 
-A 460 Ω resistor was placed between the base of the PNP transistor and the GPIO pin to limit the current draw to under 5 mA, as specified by the datasheet. Calculations for this component value can be found below. 
+A 460 Ω resistor was placed between the transisotr base and the GPIO pin to limit the current draw to under 5 mA through the base, as specified by the datasheet. Calculations for this component value can be found below. 
 
 ![Figure 1: Transistor Base Current Calculation](images/transbase.png){width=40% fig-align="center"}
 
@@ -34,15 +34,17 @@ The source code for Lab 2 can be found in the following [GitHub repository](http
 
 ![Figure 2: Block Diagram of the lab2_ih verilog design](images/blockdiagram.png){fig-align="center"}
 
-The block diagram above illustrates the lab2_ih design. The top level module is called lab2_ih and takes in inputs: reset, sw1, and sw2. Lab2_ih outputs to five leds (led), a single set of GPIO pins for the dual seven segment (segs), to both transistors to illuminate the proper segment anode (anodeOne, anodeTwo), and to the two remaining on-board LEDs to keep them from floating (bottomLEDs). Lab1_ih includes five submodules: the high-speed oscillator block (hf_osc), the clock divider to 60 Hz (clock_div), the adder (adder), the seven segments priority encoder (segments), and the anode-selecting module (anodeselect).
+The block diagram above illustrates the lab2_ih design. The top level module is called lab2_ih and takes in inputs: reset, sw1, and sw2. Lab2_ih outputs to five leds (led), a single set of GPIO pins for the dual seven segment (segs), to both transistors to illuminate the proper segment anode (anodeOne, anodeTwo), and to the two remaining on-board LEDs to keep them from floating (bottomLEDs). Lab2_ih includes five submodules: the high-speed oscillator block (hf_osc), the clock divider to 60 Hz (clock_div), the adder (adder), the seven segments priority encoder (segments), and the anode-selecting module (anodeselect).
 
 ### Schematic
 
-The schematic above illustrates the physical layout on the breadboard. Corresponding diode cathodes from the seven segment displays were the same node (segment 1 A is the same node as segment 2 A, etc). These were connected in series with a 330 Ω current-limiting resistor to the GPIO pins. The on-board LEDs required 1 kΩ resistors to their limit current. The emitter of the transistor is powered by 3.3 V, while the collector goes straight to the segment anodes. The base of the PNP transistor is in series with a 460Ω resistor such that less than 5mA of current is drawn from the GPIO pin, which lies within specs.
+The schematic above illustrates the physical layout on the breadboard. Corresponding diode cathodes from the two seven segment displays were the same node (segment 1 A is the same node as segment 2 A, etc). These were connected in series with a 330 Ω current-limiting resistor to the GPIO pins. The on-board LEDs required 1 kΩ resistors to their limit current. The emitter of the transistor is powered by 3.3 V, while the collector goes straight to the segment anodes. The base of the PNP transistor is in series with a 460Ω resistor such that less than 5mA of current is drawn from the GPIO pin, which lies within specs.
+
+
 ![Figure 3: Schematic of the Breadboard](images/schematic.png){fig-align="center"}
 
 ### Results and Discussion
-This design met the intended objectives. All switches correctly spoke with the board, the proper LED-sum combinations occured, and the Seven Segment Display shows two distinct hex values without any discernable flickering or bleeding.
+This design met the intended objectives. All switches correctly spoke with the board, the proper LED-sum combinations were calculated and illuminated, and the Seven Segment Display shows two distinct hex values without any discernable flickering or bleeding.
 
 ### Testbench Simulation
 A testbench simulation was produced for every module in the design. 
@@ -53,7 +55,7 @@ The testbench for lab2_ih can be found [here](https://github.com/Isabella-Hotten
 ![Figure 4: Testbench Simulation Results for lab2_ih](images/tb_lab2.png){fig-align="center"}
 
 #### tb_segments:
-The testbench for the segments module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_segments.sv). All possible combinations of input switch values were tested. No errors occured. 
+The testbench for the segments module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_segments.sv). All possible combinations of input switch values were explicitly tested. No errors occured. 
 
 ![Figure 5: Testbench Simulation Results for segments](images/tb_segments.png){fig-align="center"}
 
@@ -68,7 +70,7 @@ The testbench for the anodeselect module can be found [here](https://github.com/
 ![Figure 7: Testbench Simulation Results for anodeselect](images/tb_anodeselect.png){fig-align="center"}
 
 #### tb_adder:
-The testbench for the adder module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_adder.sv). A system verilog function iterates through all possible switch combinations to verify all possible additions. No errors occured. 
+The testbench for the adder module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_adder.sv). A system verilog function iterates through all possible input-addition combinations to verify all possible additions. No errors occured. 
 
  ![Figure 8: Testbench Simulation Results for adder](images/tb_adder.png){fig-align="center"}
 
