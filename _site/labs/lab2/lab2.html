@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>lab2 – E155 Portfolio</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-c1fac2584b48ed01fb6e278e36375074.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">E155 Portfolio</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../labs/labs.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../resources.html"> 
+<span class="menu-text">Resources</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#lab-2-multiplexed-7-segment-display" id="toc-lab-2-multiplexed-7-segment-display" class="nav-link active" data-scroll-target="#lab-2-multiplexed-7-segment-display">Lab 2: Multiplexed 7-Segment Display</a>
+  <ul class="collapse">
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#design-and-testing-methodology" id="toc-design-and-testing-methodology" class="nav-link" data-scroll-target="#design-and-testing-methodology">Design and Testing Methodology</a></li>
+  <li><a href="#technical-documentation" id="toc-technical-documentation" class="nav-link" data-scroll-target="#technical-documentation">Technical Documentation</a></li>
+  <li><a href="#block-diagram" id="toc-block-diagram" class="nav-link" data-scroll-target="#block-diagram">Block Diagram</a></li>
+  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
+  <li><a href="#results-and-discussion" id="toc-results-and-discussion" class="nav-link" data-scroll-target="#results-and-discussion">Results and Discussion</a></li>
+  <li><a href="#testbench-simulation" id="toc-testbench-simulation" class="nav-link" data-scroll-target="#testbench-simulation">Testbench Simulation</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#ai-prototype-summary" id="toc-ai-prototype-summary" class="nav-link" data-scroll-target="#ai-prototype-summary">AI Prototype Summary</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="lab-2-multiplexed-7-segment-display" class="level1">
+<h1>Lab 2: Multiplexed 7-Segment Display</h1>
+<section id="introduction" class="level3">
+<h3 class="anchored" data-anchor-id="introduction">Introduction</h3>
+<p>In this lab, a design was implemented on the UPduino v3.1 FPGA that time-multiplexed between two seven-segment displays. The design utilized only one set of GPIO pins, and only one seven segment HDL module. The time multiplexing occured at a fast enough rate that switching between segments was not discernable to the human eye.</p>
+</section>
+<section id="design-and-testing-methodology" class="level3">
+<h3 class="anchored" data-anchor-id="design-and-testing-methodology">Design and Testing Methodology</h3>
+<p>The iCE40 UltraPlus HSOSC primitive was used to generate a clock signal, which was stepped down to a 60 Hz signal that the design was based on. At this frequency, the human eye can no longer percieve refresh rates. This frequency also ensured that bleeding did not occur between the two segments.</p>
+<p>An 8-pin dip switch controls the HDSP-521A Dual Seven Segment Display, where the first four switches correspond to the first segment, and final four correspond to the second. When the internal clock is low, the input from the first four switches is selected, and when the clock is high, the input from the final four are selected.</p>
+<p>At the same time, when the clock is low, a signal is sent to drive the common anode of the first segment. When the clock is high, a separate signal drives the common anode of the second segment.</p>
+<p>The sum of the two hex values on the HDSP-521A Display is represented in binary on the on-board LEDs of the E155 Development Board. These diodes are in series with 1 kΩ resistors to limit current.</p>
+<p>The Seven Segment Display module- a priority encoder- was used to convert the desired switch inputs into an output hex digit. The HDSP521A required a larger current draw than the FPGA can output, which was addressed by two 2N3906 PNP transistors. 330 Ω resistors were placed at the cathodes of the diodes to ensure a 3 mA current pull through the segment, over the (3.3 V - 0.25 Vce -1.85 Vf) = 1.2 V drop, when ON. Calculations for the current limiting resistors between the cathodes and GPIO pins can be found below.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/resistor.png" class="img-fluid figure-img" style="width:40.0%"></p>
+<figcaption>Figure 0: Resistor Calculation</figcaption>
+</figure>
+</div>
+<p>A 460 Ω resistor was placed between the transisotr base and the GPIO pin to limit the current draw to under 5 mA through the base, as specified by the datasheet. Calculations for this component value can be found below.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/transbase.png" class="img-fluid figure-img" style="width:40.0%"></p>
+<figcaption>Figure 1: Transistor Base Current Calculation</figcaption>
+</figure>
+</div>
+<p>To control the input to the Seven Segment Display, a priority encoder was used. The output signals were mapped to their respective pins on the input of the HDSP-511A Seven Segment Display.</p>
+</section>
+<section id="technical-documentation" class="level3">
+<h3 class="anchored" data-anchor-id="technical-documentation">Technical Documentation</h3>
+<p>The source code for Lab 2 can be found in the following <a href="https://github.com/Isabella-Hottenrott/e155-lab2">GitHub repository</a>.</p>
+</section>
+<section id="block-diagram" class="level3">
+<h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/blockdiagram.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 2: Block Diagram of the lab2_ih verilog design</figcaption>
+</figure>
+</div>
+<p>The block diagram above illustrates the lab2_ih design. The top level module is called lab2_ih and takes in inputs: reset, sw1, and sw2. Lab2_ih outputs to five leds (led), a single set of GPIO pins for the dual seven segment (segs), to both transistors to illuminate the proper segment anode (anodeOne, anodeTwo), and to the two remaining on-board LEDs to keep them from floating (bottomLEDs). Lab2_ih includes five submodules: the high-speed oscillator block (hf_osc), the clock divider to 60 Hz (clock_div), the adder (adder), the seven segments priority encoder (segments), and the anode-selecting module (anodeselect).</p>
+</section>
+<section id="schematic" class="level3">
+<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+<p>The schematic above illustrates the physical layout on the breadboard. Corresponding diode cathodes from the two seven segment displays were the same node (segment 1 A is the same node as segment 2 A, etc). These were connected in series with a 330 Ω current-limiting resistor to the GPIO pins. The on-board LEDs required 1 kΩ resistors to their limit current. The emitter of the transistor is powered by 3.3 V, while the collector goes straight to the segment anodes. The base of the PNP transistor is in series with a 460 Ω resistor such that less than 5mA of current is drawn from the GPIO pin, which lies within specs.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/schematic.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 3: Schematic of the Breadboard</figcaption>
+</figure>
+</div>
+</section>
+<section id="results-and-discussion" class="level3">
+<h3 class="anchored" data-anchor-id="results-and-discussion">Results and Discussion</h3>
+<p>This design met the intended objectives. All switches correctly spoke with the board, the proper LED-sum combinations were calculated and illuminated, and the Seven Segment Display shows two distinct hex values without any discernable flickering or bleeding.</p>
+</section>
+<section id="testbench-simulation" class="level3">
+<h3 class="anchored" data-anchor-id="testbench-simulation">Testbench Simulation</h3>
+<p>A testbench simulation was produced for every module in the design.</p>
+<section id="tb_lab2_ih" class="level4">
+<h4 class="anchored" data-anchor-id="tb_lab2_ih">tb_lab2_ih:</h4>
+<p>The testbench for lab2_ih can be found <a href="https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_lab2_ih.sv">here</a>. The high speed clock was commented out to run this simulation, and 10 known cases were tested against the design. No errors occured.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tb_lab2.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 4: Testbench Simulation Results for lab2_ih</figcaption>
+</figure>
+</div>
+</section>
+<section id="tb_segments" class="level4">
+<h4 class="anchored" data-anchor-id="tb_segments">tb_segments:</h4>
+<p>The testbench for the segments module can be found <a href="https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_segments.sv">here</a>. All possible combinations of input switch values were explicitly tested. No errors occured.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tb_segments.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 5: Testbench Simulation Results for segments</figcaption>
+</figure>
+</div>
+</section>
+<section id="tb_clock_div" class="level4">
+<h4 class="anchored" data-anchor-id="tb_clock_div">tb_clock_div:</h4>
+<p>The testbench for the clock divider module can be found <a href="https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_clock_div.sv">here</a>. A test oscillator was produced that ticked every 800000 time stamps, where two time stamps represent a full clock cycle. The test oscillator was compared to that produced by the clock_div module when fed in the testbench clock signal. Both oscillators can be seen to rise and fall simulataneously. The HSOSC produces a 48 MHz clock. The clock divider module has been shown to divide the input clock signal by 800000. 48 MHz/800000 = 60 Hz, which is the targeted frequency switching between displays. No errors occured.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tb_clk_div.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 6: Testbench Simulation Results for clock_div</figcaption>
+</figure>
+</div>
+</section>
+<section id="tb_anodeselect" class="level4">
+<h4 class="anchored" data-anchor-id="tb_anodeselect">tb_anodeselect:</h4>
+<p>The testbench for the anodeselect module can be found <a href="https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_anodeselect.sv">here</a>. The test verifies that the correct switch value is sent to the segment modules, as well as the corresponding correct anode, across 12 handwritten vectors. The test verifies that the two anodes are never HIGH at the same timestamp. No errors occured.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tb_anodeselect.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 7: Testbench Simulation Results for anodeselect</figcaption>
+</figure>
+</div>
+</section>
+<section id="tb_adder" class="level4">
+<h4 class="anchored" data-anchor-id="tb_adder">tb_adder:</h4>
+<p>The testbench for the adder module can be found <a href="https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_adder.sv">here</a>. A system verilog function iterates through all possible input-addition combinations to verify all possible additions. No errors occured.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tb_adder.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 8: Testbench Simulation Results for adder</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>This design design illuminated a Dual Seven Segment Display using a single segment module through the use of time-multiplexing. A transistor circuit and selected resistors were used to ensure that sufficient, but not excessive current, flows through components based on datasheet values. I spent a total of 18 hours on this lab.</p>
+</section>
+<section id="ai-prototype-summary" class="level3">
+<h3 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h3>
+<p>The prompt that I provided the LLM was: “Write SystemVerilog HDL to time multiplex a single seven segment decoder (that decodes from four bits to a common anode seven segment display) to decode two sets of input bits and drive two sets of seven output bits.” In return, I recieved the following design that did not synthesize:</p>
+<pre><code>// Time Multiplexed Seven Segment Display Controller
+// This module uses a single seven segment decoder to drive two displays
+
+module seven_seg_mux (
+    input  logic        clk,
+    input  logic        reset_n,
+    input  logic [3:0]  digit0_in,    // First 4-bit input
+    input  logic [3:0]  digit1_in,    // Second 4-bit input
+    output logic [6:0]  seg0_out,     // Seven segment outputs for display 0
+    output logic [6:0]  seg1_out,     // Seven segment outputs for display 1
+    output logic        digit0_enable, // Enable signal for display 0
+    output logic        digit1_enable  // Enable signal for display 1
+);
+
+    // Internal signals
+    logic [3:0] mux_input;
+    logic [6:0] decoder_output;
+    logic       mux_select;
+    logic       slow_clk;
+
+    // Instantiate oscillator for timing
+    oscillator u_osc (
+        .clk(clk),
+        .reset_n(reset_n),
+        .slow_clk(slow_clk)
+    );
+
+    // Generate multiplexer select signal
+    always_ff @(posedge slow_clk or negedge reset_n) begin
+        if (!reset_n)
+            mux_select &lt;= 1'b0;
+        else
+            mux_select &lt;= ~mux_select;
+    end
+
+    // Input multiplexer
+    always_comb begin
+        case (mux_select)
+            1'b0: mux_input = digit0_in;
+            1'b1: mux_input = digit1_in;
+        endcase
+    end
+
+    // Instantiate seven segment decoder
+    seven_seg_decoder u_decoder (
+        .bin_in(mux_input),
+        .seg_out(decoder_output)
+    );
+
+    // Output demultiplexer and enable generation
+    always_comb begin
+        case (mux_select)
+            1'b0: begin
+                seg0_out = decoder_output;
+                seg1_out = 7'b1111111;  // All segments off (common anode)
+                digit0_enable = 1'b0;   // Active low enable
+                digit1_enable = 1'b1;   // Disabled
+            end
+            1'b1: begin
+                seg0_out = 7'b1111111;  // All segments off
+                seg1_out = decoder_output;
+                digit0_enable = 1'b1;   // Disabled
+                digit1_enable = 1'b0;   // Active low enable
+            end
+        endcase
+    end
+
+endmodule
+
+// Seven Segment Decoder Module
+// Converts 4-bit binary input to seven segment display pattern
+// Common anode configuration (active low outputs)
+module seven_seg_decoder (
+    input  logic [3:0] bin_in,
+    output logic [6:0] seg_out
+);
+
+    // Segment mapping: seg_out = {g, f, e, d, c, b, a}
+    // Common anode: 0 = segment on, 1 = segment off
+    always_comb begin
+        case (bin_in)
+            4'h0: seg_out = 7'b1000000; // 0
+            4'h1: seg_out = 7'b1111001; // 1
+            4'h2: seg_out = 7'b0100100; // 2
+            4'h3: seg_out = 7'b0110000; // 3
+            4'h4: seg_out = 7'b0011001; // 4
+            4'h5: seg_out = 7'b0010010; // 5
+            4'h6: seg_out = 7'b0000010; // 6
+            4'h7: seg_out = 7'b1111000; // 7
+            4'h8: seg_out = 7'b0000000; // 8
+            4'h9: seg_out = 7'b0010000; // 9
+            4'hA: seg_out = 7'b0001000; // A
+            4'hB: seg_out = 7'b0000011; // b
+            4'hC: seg_out = 7'b1000110; // C
+            4'hD: seg_out = 7'b0100001; // d
+            4'hE: seg_out = 7'b0000110; // E
+            4'hF: seg_out = 7'b0001110; // F
+        endcase
+    end
+
+endmodule
+
+// Simple Oscillator Module
+// Generates a slower clock for multiplexing
+module oscillator (
+    input  logic clk,
+    input  logic reset_n,
+    output logic slow_clk
+);
+
+    parameter DIVIDE_BY = 100000; // Adjust for desired refresh rate
+    logic [$clog2(DIVIDE_BY)-1:0] counter;
+
+    always_ff @(posedge clk or negedge reset_n) begin
+        if (!reset_n) begin
+            counter &lt;= '0;
+            slow_clk &lt;= 1'b0;
+        end else begin
+            if (counter == DIVIDE_BY - 1) begin
+                counter &lt;= '0;
+                slow_clk &lt;= ~slow_clk;
+            end else begin
+                counter &lt;= counter + 1;
+            end
+        end
+    end
+
+endmodule
+
+// Testbench for verification
+module seven_seg_mux_tb;
+
+    logic        clk;
+    logic        reset_n;
+    logic [3:0]  digit0_in;
+    logic [3:0]  digit1_in;
+    logic [6:0]  seg0_out;
+    logic [6:0]  seg1_out;
+    logic        digit0_enable;
+    logic        digit1_enable;
+
+    // Instantiate DUT
+    seven_seg_mux dut (
+        .clk(clk),
+        .reset_n(reset_n),
+        .digit0_in(digit0_in),
+        .digit1_in(digit1_in),
+        .seg0_out(seg0_out),
+        .seg1_out(seg1_out),
+        .digit0_enable(digit0_enable),
+        .digit1_enable(digit1_enable)
+    );
+
+    // Clock generation
+    initial begin
+        clk = 0;
+        forever #5 clk = ~clk;
+    end
+
+    // Test stimulus
+    initial begin
+        reset_n = 0;
+        digit0_in = 4'h0;
+        digit1_in = 4'h0;
+
+        #100 reset_n = 1;
+
+        // Test different digit combinations
+        #1000 digit0_in = 4'h3; digit1_in = 4'h7;
+        #2000 digit0_in = 4'hA; digit1_in = 4'hF;
+        #2000 digit0_in = 4'h5; digit1_in = 4'h2;
+
+        #5000 $finish;
+    end
+
+    // Monitor outputs
+    initial begin
+        $monitor("Time=%0t, digit0_in=%h, digit1_in=%h, seg0=%b, seg1=%b, en0=%b, en1=%b", 
+                $time, digit0_in, digit1_in, seg0_out, seg1_out, digit0_enable, digit1_enable);
+    end
+
+endmodule</code></pre>
+<p>Next, I asked the LLM to: “Write SystemVerilog HDL to time multiplex a single seven segment decoder (that decodes from four bits to a common anode seven segment display) to decode two sets of input bits and drive two sets of seven output bits. Use the seven segment decoder and oscillator provided in the attached files.” and attached my Lab 1 files. I received the following design that, again, did not synthesize.</p>
+<pre><code>// Isabella Hottenrott's segments module
+// segments.sv
+// Module containing Verilog code for Seven-segment display mapping
+module segments(input logic [3:0] digit,
+                output logic [6:0] segs);
+
+always_comb
+case(digit)
+    0:  segs = 7'b000_0001; //0
+    1:  segs = 7'b100_1111; //1
+    2:  segs = 7'b001_0010; //2
+    3:  segs = 7'b000_0110; //3
+    4:  segs = 7'b100_1100; //4
+    5:  segs = 7'b010_0100; //5
+    6:  segs = 7'b010_0000; //6
+    7:  segs = 7'b000_1111; //7
+    8:  segs = 7'b000_0000; //8
+    9:  segs = 7'b000_1100; // 9
+    10: segs = 7'b000_1000; //a
+    11: segs = 7'b110_0000; //b
+    12: segs = 7'b011_0001; //c
+    13: segs = 7'b100_0010; //d
+    14: segs = 7'b011_0000; //e
+    15: segs = 7'b011_1000; //f
+    default:    segs = 7'b111_1111;
+endcase
+endmodule
+
+// Simple oscillator module for timing control
+module oscillator(input logic clk,
+              input logic reset,
+              output logic slow_clk);
+
+parameter DIVIDE_RATIO = 50000; // Adjust for desired refresh rate
+logic [$clog2(DIVIDE_RATIO)-1:0] counter;
+
+always_ff @(posedge clk or posedge reset) begin
+    if (reset) begin
+        counter &lt;= 0;
+        slow_clk &lt;= 0;
+    end else begin
+        if (counter == DIVIDE_RATIO - 1) begin
+            counter &lt;= 0;
+            slow_clk &lt;= ~slow_clk;
+        end else begin
+            counter &lt;= counter + 1;
+        end
+    end
+end
+endmodule
+
+module seven_seg_time_mux(
+    input logic clk,
+    input logic reset,
+    input logic [3:0] digit0,    // First 4-bit input
+    input logic [3:0] digit1,    // Second 4-bit input
+    output logic [6:0] segs0,    // Seven segment outputs for display 0
+    output logic [6:0] segs1     // Seven segment outputs for display 1
+);
+
+// Internal signals
+logic [3:0] mux_digit;       // Multiplexed input to decoder
+logic [6:0] decoder_segs;    // Output from segments decoder
+logic mux_select;            // Select signal for multiplexing
+logic slow_clk;              // Slower clock for multiplexing
+
+// Instantiate oscillator for timing control
+oscillator timing_gen (
+    .clk(clk),
+    .reset(reset),
+    .slow_clk(slow_clk)
+);
+
+// Generate multiplexer select signal (toggles between displays)
+always_ff @(posedge slow_clk or posedge reset) begin
+    if (reset)
+        mux_select &lt;= 1'b0;
+    else
+        mux_select &lt;= ~mux_select;
+end
+
+// Input multiplexer - select which digit to decode
+always_comb begin
+    case (mux_select)
+        1'b0: mux_digit = digit0;
+        1'b1: mux_digit = digit1;
+        default: mux_digit = digit0;
+    endcase
+end
+
+// Instantiate Isabella's segments decoder
+segments decoder (
+    .digit(mux_digit),
+    .segs(decoder_segs)
+);
+
+// Output demultiplexer - route decoder output to appropriate display
+// When a display is not selected, turn off all segments (common anode = all high)
+always_comb begin
+    case (mux_select)
+        1'b0: begin
+            segs0 = decoder_segs;    // Display digit0
+            segs1 = 7'b111_1111;     // Turn off display 1
+        end
+        1'b1: begin
+            segs0 = 7'b111_1111;     // Turn off display 0
+            segs1 = decoder_segs;    // Display digit1
+        end
+        default: begin
+            segs0 = 7'b111_1111;
+            segs1 = 7'b111_1111;
+        end
+    endcase
+end</code></pre>
+<p>endmodule</p>
+<pre><code>logic clk;
+logic reset;
+logic [3:0] digit0;
+logic [3:0] digit1;
+logic [6:0] segs0;
+logic [6:0] segs1;
+
+// Instantiate the Device Under Test (DUT)
+seven_seg_time_mux dut (
+    .clk(clk),
+    .reset(reset),
+    .digit0(digit0),
+    .digit1(digit1),
+    .segs0(segs0),
+    .segs1(segs1)
+);
+
+// Clock generation (50MHz system clock)
+initial begin
+    clk = 0;
+    forever #10 clk = ~clk; // 20ns period = 50MHz
+end
+
+// Test stimulus
+initial begin
+    // Initialize signals
+    reset = 1;
+    digit0 = 4'h0;
+    digit1 = 4'h0;
+    
+    // Release reset
+    #100 reset = 0;
+    
+    // Test case 1: Display 3 and 7
+    #1000 digit0 = 4'h3; digit1 = 4'h7;
+    
+    // Test case 2: Display A and F (hex)
+    #5000 digit0 = 4'hA; digit1 = 4'hF;
+    
+    // Test case 3: Display 5 and 2
+    #5000 digit0 = 4'h5; digit1 = 4'h2;
+    
+    // Test case 4: Display 8 and 1
+    #5000 digit0 = 4'h8; digit1 = 4'h1;
+    
+    // Finish simulation
+    #10000 $finish;
+end
+
+// Monitor key signals
+initial begin
+    $monitor("Time=%0t, digit0=%h, digit1=%h, segs0=%b, segs1=%b", 
+             $time, digit0, digit1, segs0, segs1);
+end
+
+// Generate VCD file for waveform viewing
+initial begin
+    $dumpfile("seven_seg_mux.vcd");
+    $dumpvars(0, seven_seg_time_mux_tb);
+end</code></pre>
+<p>endmodule</p>
+<p>Both designs ran into the issue that the “loop count limit [of the clock] exceeded forever never breaks”. This occured because both LLM outputs created associated testbenches. I tried to take out this forever statement, and make the clock tick similarly to my own testbenches. However, when I did this, I received a “Synthesize Design Completed, Lattice Synthesis Engine Failed” error.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/Isabella-Hottenrott\.github\.io\/hmc-e155-portfolio\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
