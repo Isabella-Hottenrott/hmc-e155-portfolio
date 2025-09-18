@@ -3,6 +3,9 @@
 
 ### Introduction
 
+In this lab, a design was implemented on the UPduino v3.1 FPGA board to display a continuous stream of hexadecimal inputs from a 4-by-4 matrix scanner onto a dual segment LED display. The number of pins on the FPGA board limits this implementation to time-multiplex between the two output signals on the Dual Segment display, meaning much of the logic and breadboarding from Lab 2 was borrowed. The task of this lab must overcome two main challenges: one involving asynchronous inputs from a user, and the other involving "switch bouncing". To address these issues, my design thought process relied heavily on the E85 style of a "Datapath" and "Control Unit". The "Datapath" deals with inputs, outputs, and operations on or intermediate storage of logic. The "Control Unit" is my FSM, and deals with the flow between "states" of my abstract implementation, sending and recieving control signals to the "Datapath" section to facilitate the proper advancement of logic.
+
+
 ### Design and Testing Methodology
 
 ### Technical Documentation
@@ -12,8 +15,36 @@
 ### Schematic
 
 ### Results and Discussion
+This design met the intended objectives. The testbenches created for the different modules all passed. The Dual LED Segment correctly displayed the inputted hexadecimal digits typed into the keypad. The system did not lock or get confused when an invalid, asynchronous, or mechanically-bounced input was punched in. The two digits were illuminated and distinct.
 
 ### Testbench Simulation
+
+A testbench simulation was produced for every module in the design. 
+
+#### tb_lab3_ih:
+The testbench for lab3_ih can be found [here]().  No errors occured. 
+
+![Figure 4: Testbench Simulation Results for lab2_ih](images/tb_lab2.png){fig-align="center"}
+
+#### tb_segments:
+The testbench for the segments module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_segments.sv). All possible combinations of input switch values were explicitly tested. No errors occured. 
+
+![Figure 5: Testbench Simulation Results for segments](images/tb_segments.png){fig-align="center"}
+
+#### tb_clock_div:
+The testbench for the clock divider module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_clock_div.sv). A test oscillator was produced that ticked every 800000 time stamps, where two time stamps represent a full clock cycle. The test oscillator was compared to that produced by the clock_div module when fed in the testbench clock signal. Both oscillators can be seen to rise and fall simulataneously. The HSOSC produces a 48 MHz clock. The clock divider module has been shown to divide the input clock signal by 800000. 48 MHz/800000 = 60 Hz, which is the targeted frequency switching between displays. No errors occured. 
+
+![Figure 6: Testbench Simulation Results for clock_div](images/tb_clk_div.png){fig-align="center"}
+
+#### tb_anodeselect:
+The testbench for the anodeselect module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_anodeselect.sv). The test verifies that the correct switch value is sent to the segment modules, as well as the corresponding correct anode, across 12 handwritten vectors. The test verifies that the two anodes are never HIGH at the same timestamp. No errors occured. 
+
+![Figure 7: Testbench Simulation Results for anodeselect](images/tb_anodeselect.png){fig-align="center"}
+
+#### tb_adder:
+The testbench for the adder module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_adder.sv). A system verilog function iterates through all possible input-addition combinations to verify all possible additions. No errors occured. 
+
+ ![Figure 8: Testbench Simulation Results for adder](images/tb_adder.png){fig-align="center"}
 
 ### Conclusion
 
