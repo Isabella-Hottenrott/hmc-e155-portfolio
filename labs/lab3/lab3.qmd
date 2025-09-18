@@ -7,6 +7,8 @@ In this lab, a design was implemented on the UPduino v3.1 FPGA board to display 
 
 
 ### Design and Testing Methodology
+DRAW YOUR FSM
+GO BACK AND FIX THE TB_CLOCKDIV SECTION WHERE YOU ARENT SURE ABT THE CLCOK DIVISION
 
 ### Technical Documentation
 
@@ -22,30 +24,66 @@ This design met the intended objectives. The testbenches created for the differe
 A testbench simulation was produced for every module in the design. 
 
 #### tb_lab3_ih:
-The testbench for lab3_ih can be found [here]().  No errors occured. 
+The testbench for lab3_ih can be found [here](https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_lab3_ih.sv). Seven different potential button presses were tested and proven to output the correct value. Some of these included corner cases, such as what happens when there is a double press, or what happens when second press is asserted while the first press is still held. Additionally, this testbench checked that columns didn't continue to cycle when they weren't supposed to. The input four bit row logic was specified, as well as the four bit column logic, allowing me to decipher which key was being pressed. The correct outputs, as well as the correct anode illumination, was verified in this testbench. No errors occured. 
 
-![Figure 4: Testbench Simulation Results for lab2_ih](images/tb_lab2.png){fig-align="center"}
+![Figure 4: Testbench Simulation Results for lab3_ih](images/tb_lab3_ihi.png){fig-align="center"}
 
-#### tb_segments:
-The testbench for the segments module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_segments.sv). All possible combinations of input switch values were explicitly tested. No errors occured. 
+#### tb_DataPath:
+The testbench for the DataPath module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_DataPath.sv). This testbench tested different possible inputs into the DataPath module. The testbench verified the output of all the different combinations of possible signal inputs from the FSM module, and accounted for the timing and cohesion of all the submodules contained within DataPath.sv. The different test cases attempted to demonstrate basic functionality, as well as target corner cases, such as when invalid entries were asserted. No errors occured. 
 
-![Figure 5: Testbench Simulation Results for segments](images/tb_segments.png){fig-align="center"}
+![Figure 5: Testbench Simulation Results for DataPath](images/tb_datapathi.png){fig-align="center"}
+
+#### tb_FSM:
+The testbench for the FSM module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_FSM.sv). This testbench tested all different possible combinations of inputs into the FSM module. The testbench extracted the state and next state of the system, to verify that these matched the expected state. Two whole cycles through the FSM were practised. No errors occured. 
+
+![Figure 5: Testbench Simulation Results for DataPath](images/tb_fsm.png){fig-align="center"}
+
+#### tb_CombCol:
+The testbench for the CombCol module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_CombCol.sv). This testbench tested all different possible combinations of inputs into the CombCol module- a simple encoder. No errors occured. 
+
+![Figure 5: Testbench Simulation Results for DataPath](images/tb_fsm.png){fig-align="center"}
 
 #### tb_clock_div:
-The testbench for the clock divider module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_clock_div.sv). A test oscillator was produced that ticked every 800000 time stamps, where two time stamps represent a full clock cycle. The test oscillator was compared to that produced by the clock_div module when fed in the testbench clock signal. Both oscillators can be seen to rise and fall simulataneously. The HSOSC produces a 48 MHz clock. The clock divider module has been shown to divide the input clock signal by 800000. 48 MHz/800000 = 60 Hz, which is the targeted frequency switching between displays. No errors occured. 
+The testbench for the clock divider module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_clock_div.sv). A test oscillator was produced that ticked every 100000 time stamps, where two time stamps represent a full clock cycle. The test oscillator was compared to that produced by the clock_div module when fed in the testbench clock signal. Both oscillators can be seen to rise and fall simulataneously. The HSOSC produces a 12 MHz clock. The clock divider module has been shown to divide the input clock signal by 200000. 12 MHz/200000 = 60 Hz, which is the targeted frequency switching between displays. No errors occured. 
 
-![Figure 6: Testbench Simulation Results for clock_div](images/tb_clk_div.png){fig-align="center"}
+![Figure 6: Testbench Simulation Results for clock_div](images/tb_clock_div.png){fig-align="center"}
 
 #### tb_anodeselect:
-The testbench for the anodeselect module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_anodeselect.sv). The test verifies that the correct switch value is sent to the segment modules, as well as the corresponding correct anode, across 12 handwritten vectors. The test verifies that the two anodes are never HIGH at the same timestamp. No errors occured. 
+The testbench for the anodeselect module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_anodeselect.sv). The test verifies that the correct segment output and segment anode are sent off the FPGA at the correct multiplexed timestamp. The test verifies that the two segments are never sent out at the same time. No errors occured. 
 
 ![Figure 7: Testbench Simulation Results for anodeselect](images/tb_anodeselect.png){fig-align="center"}
 
-#### tb_adder:
-The testbench for the adder module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab2/blob/main/fpga/source/impl_1/tb_adder.sv). A system verilog function iterates through all possible input-addition combinations to verify all possible additions. No errors occured. 
+#### tb_colrowseg:
+The testbench for the colrowseg module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_colrowseg.sv). The test asserts all possible inputs for this combinational module. No errors occured. 
 
- ![Figure 8: Testbench Simulation Results for adder](images/tb_adder.png){fig-align="center"}
+ ![Figure 8: Testbench Simulation Results for colrowseg](images/tb_colrowseg.png){fig-align="center"}
+
+#### tb_debouncer:
+The testbench for the debouncer module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_debouncer.sv). The enable logic for the debouncing was tested. It was also 600000 timestamps were required for the debouncing counter to expire. This equates to 50 ms when clk comes from the 12 MHz HSOSC. No errors occured. 
+
+ ![Figure 8: Testbench Simulation Results for debouncer](images/tb_debouncer.png){fig-align="center"}
+
+
+#### tb_scancounter:
+The testbench for the scancounter module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_scancounter.sv). This testbench verifies that the scanning of columns cycles through columns and equal and even amount. Correct response to the enable signal was proven. No errors occured. 
+
+ ![Figure 8: Testbench Simulation Results for scancounter](images/tb_scancounter.png){fig-align="center"}
+
+
+#### tb_seg_ff:
+The testbench for the seg_ff module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_seg_ff.sv). A variety of different test cases were tested against the seg_ff module. Different row and column values were tested, including invalid ones, producing segment0 and segment1 signals. Correct response to the enable signal was proven. No errors occured. 
+
+ ![Figure 8: Testbench Simulation Results for seg_ff](images/tb_seg_ff.png){fig-align="center"}
+
+
+#### tb_synchronizer:
+The testbench for the synchronizer module can be found [here](https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_synchronizer.sv). Test cases were tested against the synchronizer module, ensuring that after two cycles, the correct logic was synchronized with the clock. Correct response to the enable signal was proven, as well as the correct assertion of a "done" signal. No errors occured. 
+
+ ![Figure 8: Testbench Simulation Results for synchronizer](images/tb_synchronizer.png){fig-align="center"}
+
 
 ### Conclusion
+This design successfully illuminated a Dual Seven Segment Display based on a stream of inputs from a 4x4 keypad, using time-multiplexed outpus. The design handled asynchronous inputs and mechanical boucning of switches. Proper component selection allowed for strong illumination of the display. I spent a total of 40 hours on this lab.
+
 
 ### AI Prototype Summary
