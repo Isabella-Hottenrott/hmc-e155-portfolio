@@ -45,6 +45,18 @@ The schematic above illustrates the physical layout on the breadboard. The diode
 
 This design met the intended objectives. All switches perform the intended logic, as can be demonstrated on the board by performing all switch combinations. A testbench simulation to verify the SystemVerilog design was not provided for this lab. This was a missing component of this project.
 
+### Testbench Simulation
+
+![Figure 5: Schematic of the Physical Circuit](images/tb_lab1_ih.png){width=50% fig-align="center"}
+Above are the waveforms produced by the testbench of the lab1_ih module. All possible combinations of input switch values were explicitly tested. The resulting led and single segment display were tested against expectations. The HSOSC primitive was imported into the testbench to verify funcitonality. No errors occured. 
+
+![Figure 6: Schematic of the Physical Circuit](images/tb_segments.png){width=50% fig-align="center"}
+Above are the waveforms produced by the testbench of the segments module. All possible combinations of input switch values were explicitly tested. The resulting single segment display outputs were tested against expectations. No errors occured. 
+
+![Figure 7: Schematic of the Physical Circuit](images/tb_clock_div.png){width=50% fig-align="center"}
+Above are the waveforms produced by the testbench of the clock_div module. A test oscillator was produced that ticked every XX time stamps. This mimics the behavior of the clock divider, as the led is desiredto oscillate at a 1.4 Hz frequency, or ___. The test oscillator was compared to that produced by the clock_div module when fed in the testbench clock signal. Both oscillators can be seen to rise and fall simulataneously. No errors occured. 
+
+The HSOSC produces a 48 MHz clock. The clock divider module has been shown to divide the input clock signal by 800000. 48 MHz/800000 = 60 Hz, which is the targeted frequency switching between displays. No errors occured. 
 
 ### Conclusion
 
