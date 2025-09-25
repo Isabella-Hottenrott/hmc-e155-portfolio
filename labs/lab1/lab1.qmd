@@ -46,15 +46,15 @@ This design met the intended objectives. All switches perform the intended logic
 
 ### Testbench Simulation
 
-![Figure 5: Schematic of the Physical Circuit](images/tb_lab1_ih.png){fig-align="center"}
+![Figure 5: Waveforms for tb_lab1_ih](images/tb_lab1_ih.png){fig-align="center"}
 
 Above are the waveforms produced by the testbench of the lab1_ih module. All possible combinations of input switch values were explicitly tested. The resulting led and single segment display were tested against expectations. The HSOSC primitive was imported into the testbench to verify funcitonality. No errors occured. 
 
-![Figure 6: Schematic of the Physical Circuit](images/tb_segments.png){fig-align="center"}
+![Figure 6: Waveforms for tb_segments](images/tb_segments.png){fig-align="center"}
 
 Above are the waveforms produced by the testbench of the segments module. All possible combinations of input switch values were explicitly tested. The resulting single segment display outputs were tested against expectations. No errors occured. 
 
-![Figure 7: Schematic of the Physical Circuit](images/tb_clock_div.png){fig-align="center"}
+![Figure 7: Waveforms for tb_clock_div](images/tb_clock_div.png){fig-align="center"}
 
 Above are the waveforms produced by the testbench of the clock_div module. A test oscillator was produced that ticked every 20,000,000 time stamps. This mimics the behavior of the clock divider, as the led is desired to oscillate at a 2.4 Hz frequency, or 20,000,000 times every edge of the 48 MHz HSOSC clock. 48 MHz/20,000,000 = 2.4 Hz. The test oscillator was compared to that produced by the clock_div module when fed in the testbench clock signal. Both oscillators can be seen to rise and fall simulataneously. No errors occured. 
 
