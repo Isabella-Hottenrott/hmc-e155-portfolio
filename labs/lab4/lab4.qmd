@@ -109,6 +109,7 @@ This design could have been undertaken in a different way, by producing a PWM si
 
 ### Conclusion
 Overall, this project was an opportunity to familiarize myself with the different functionalities of the STM32L432KC board, and how to navigate the Reference Manual and Datasheet. It was fun to compose a piece of my choice, as well.
+I spent 15 hours on this lab.
 
 ### AI Prototype Summary
 
