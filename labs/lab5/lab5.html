@@ -68,6 +68,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -126,10 +155,9 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#design-and-testing-methodology" id="toc-design-and-testing-methodology" class="nav-link" data-scroll-target="#design-and-testing-methodology">Design and Testing Methodology</a></li>
   <li><a href="#technical-documentation" id="toc-technical-documentation" class="nav-link" data-scroll-target="#technical-documentation">Technical Documentation</a></li>
-  <li><a href="#block-diagram" id="toc-block-diagram" class="nav-link" data-scroll-target="#block-diagram">Block Diagram</a></li>
+  <li><a href="#interrupt-diagram" id="toc-interrupt-diagram" class="nav-link" data-scroll-target="#interrupt-diagram">Interrupt Diagram</a></li>
   <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
   <li><a href="#results-and-discussion" id="toc-results-and-discussion" class="nav-link" data-scroll-target="#results-and-discussion">Results and Discussion</a></li>
-  <li><a href="#testbench-simulation" id="toc-testbench-simulation" class="nav-link" data-scroll-target="#testbench-simulation">Testbench Simulation</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#ai-prototype-summary" id="toc-ai-prototype-summary" class="nav-link" data-scroll-target="#ai-prototype-summary">AI Prototype Summary</a></li>
   </ul></li>
@@ -146,30 +174,208 @@ ul.task-list li input[type="checkbox"] {
 <h1>Lab 5: Interrupts</h1>
 <section id="introduction" class="level3">
 <h3 class="anchored" data-anchor-id="introduction">Introduction</h3>
+<p>In this lab, interrupts were configured on the STM32L432KC Board to register all inputs of a quadrature encoder over a GPIO pin, and accurately report the angular velocity of a motor. A motor and attached quadrature encoder were powered and attached to the GPIO pins of the MCU. The interrupts were configured through writing to various registers, as well as an interrupt service routine coded in C. The inputs from the interrupts are passed through a decoding scheme that accounts for direction and potential debouncing or jitter, as detailed by the reference manual, to output a count of pulses from the Hall Effect encoder sensors. The decoded signals were sampled and entirely refreshed every 100ms, providing an accurate report of the motor’s velocity at a frequency of 10 Hz.</p>
 </section>
 <section id="design-and-testing-methodology" class="level3">
 <h3 class="anchored" data-anchor-id="design-and-testing-methodology">Design and Testing Methodology</h3>
+<p>Research on the protocol of a quadrature encoder was undertaken in order to best understand the steps required to proceed. To produce the most precise report of velocity, encoder pulses were detected on both the rising and falling edges of both encoder A and B. This, as well as other register configurations like enabling the system clock, configuraing themas bits, and turning on the EXTI interrupt, were executed. The Nested Vector Interrupt Controller, as a result, is able to redirect any interrupts to their respective routines by saving the PC and loading the corresponding ISR into the PC. The ISRs are short and only turn on a flag, which is recognized in main.c and propagates the further calculations from there. Both GPIO pins are read, and their readings are encoded and processed to produce a pulse count. The processing draws inspiration from the TIM2 Encoder Interface Mode. From there, the velocity is calculated following the equation:</p>
+<p><span class="math display">\[
+Velocity =
+\frac{pulses * time}{1000*no.edges*PPR}
+\]</span></p>
+<p>As time is reported in milliseconds, the time/1000 component is multiplied into the velocity calculation. This implementation detects both rising and falling edges of the two encoders, so a total of four edges. The PPR of the encoder used in this design is 408 pulses per revolution. The velocity is reported every 100ms- so at a 10 Hz frequency- which is controlled by a timer, UPDATE_TIM. The code is written in a modular way such that switching to a report frequency of 1 Hz is simple and easy.</p>
 </section>
 <section id="technical-documentation" class="level3">
 <h3 class="anchored" data-anchor-id="technical-documentation">Technical Documentation</h3>
+<p>The basis for encoding of detected pulses was taken from the <a href="file:///Users/bellahottenrott/Downloads/rm0394-stm32l41xxx42xxx43xxx44xxx45xxx46xxx-advanced-armbased-32bit-mcus-stmicroelectronics%20(1).pdf">STM32L4xxxx Reference manual</a>. The diagram is shown below.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/EncoderInterface.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Figure 0: TIM2 Encoder Interface Chart (Figure 280 from Reference Manual)</figcaption>
+</figure>
+</div>
+<p>Each current and previous value was recorded, and the resulting contribution to the total number of pulses derived. To do so, the following two tables were written out.</p>
+<section id="previous-and-current-encoder-values" class="level5">
+<h5 class="anchored" data-anchor-id="previous-and-current-encoder-values">Previous and Current Encoder Values</h5>
+<div id="Encoder" class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/binaryfsm.png" class="img-fluid figure-img" style="width:30.0%"></p>
+<figcaption>Figure 1a: Oscilloscope Trace using Interrupt Method</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/decimalfsm.png" class="img-fluid figure-img" style="width:30.0%"></p>
+<figcaption>Figure 1b: Converted to Decimal</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>These detailed processing was executed through a case statement in C.</p>
+<p>Calculations to verify this implementation are shown below. The frequency of pulses was found through an oscilloscope, and the velocity was backward counted from there by hand. The result was compared to what was found in Segger.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/calculations.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 3: Velocity Calculations</figcaption>
+</figure>
+</div>
 </section>
-<section id="block-diagram" class="level3">
-<h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
+</section>
+<section id="interrupt-diagram" class="level3">
+<h3 class="anchored" data-anchor-id="interrupt-diagram">Interrupt Diagram</h3>
+<p>The below diagram illustrates the main steps of the program and different function calls that execute with the enabled interrupts.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/flowchart.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Figure 3: Interrupt Flowchart</figcaption>
+</figure>
+</div>
 </section>
 <section id="schematic" class="level3">
 <h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+<p>The below schematic illustrates the simple setup for this design.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/schematic.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Figure 4: Schematic</figcaption>
+</figure>
+</div>
 </section>
 <section id="results-and-discussion" class="level3">
 <h3 class="anchored" data-anchor-id="results-and-discussion">Results and Discussion</h3>
+<p>This project successfully demonstrated the ability and efficacy of an interrupt protocol to act immediately.</p>
+<p>In order to further investigate the reduction in latency by implementing an interrupt scheme, similar code was run using a polling method, where the GPIO pins were simply scanned. The differences were observed over an oscilloscope. Traces of the input pulse signals from the encoder are visible in both. An “acknowledged” signal is also put on the scope, for both implementations.</p>
+<section id="polling-oscilloscope-traces" class="level5">
+<h5 class="anchored" data-anchor-id="polling-oscilloscope-traces">Polling Oscilloscope Traces</h5>
+<div id="Polling" class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/polling.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 5a: Oscilloscope Trace using Polling Method</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/pollingzoom.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 5b: Zoomed in</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
 </section>
-<section id="testbench-simulation" class="level3">
-<h3 class="anchored" data-anchor-id="testbench-simulation">Testbench Simulation</h3>
+<section id="interrupt-oscilloscope-traces" class="level5">
+<h5 class="anchored" data-anchor-id="interrupt-oscilloscope-traces">Interrupt Oscilloscope Traces</h5>
+<div id="Interrupt" class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/interrupt.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 6a: Oscilloscope Trace using Interrupt Method</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/interruptzoom.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 6b: Zoomed in</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>As can be seen, the polling method- which required 200 ms of delay- missed a large amount of the pulses in processing the realized pulse. As a result, the velocity was grossly miscalculated. On the other hand, the interrupt method is demonstrated to capture both the rising and falling edge of the single encoder pulse. Therefore- especially at high speeds- the performance of a manual polling method is much poorer than that of an interrupt implementation.</p>
+</section>
 </section>
 <section id="conclusion" class="level3">
 <h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>This design was a successful implementation of a quadrature encoder. The reported velocity is precise for a variety of reasons. For one, the system is very responsiveness due to the configured interrupts. The high resolution provided by four edge detection provides more precision, as well as the 10 Hz update rate, and the reporting of velocity to four decimal points. This lab took me 11 hours.</p>
 </section>
 <section id="ai-prototype-summary" class="level3">
 <h3 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h3>
+<p>I prompted ChatGPT5 with the following: “Write me interrupt handlers to interface with a quadrature encoder. I’m using the STM32L432KC, what pins should I connect the encoder to in order to allow it to easily trigger the interrupts?”</p>
+<p>In response, it provided me with the following:</p>
+<pre><code>    "// Globals
+    static volatile int32_t encoder_count = 0;
+    static volatile uint8_t prev_state = 0;
+
+    // Call this during init (after HAL_Init and clocks).
+    static void Encoder_EXTI_Init(void) {
+        __HAL_RCC_GPIOA_CLK_ENABLE();
+
+        gi.Mode  = GPIO_MODE_IT_RISING_FALLING;  // fire on both edges
+        gi.Pull  = GPIO_PULLUP;                  // or GPIO_NOPULL if you have externals
+        gi.Speed = GPIO_SPEED_FREQ_LOW;
+
+        // Using PA0 (A) and PA1 (B). Change to whatever pins you chose.
+        gi.Pin = GPIO_PIN_0 | GPIO_PIN_1;
+        HAL_GPIO_Init(GPIOA, &amp;gi);
+
+        // Read initial state
+        uint8_t a = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) ? 1 : 0;
+        uint8_t b = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1) ? 1 : 0;
+        prev_state = (a &lt;&lt; 1) | b;
+
+        // Enable EXTI lines NVIC (EXTI0 for PA0, EXTI1 for PA1)
+        HAL_NVIC_SetPriority(EXTI0_IRQn, 5, 0);
+        HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
+        HAL_NVIC_SetPriority(EXTI1_IRQn, 5, 0);
+        HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+    } 
+    
+    // Returns +1, -1, or 0 based on transition
+        static inline int8_t quad_step(uint8_t prev, uint8_t next) {
+            // Index  (prev&lt;&lt;2)|next, values: 0, +1, -1, etc.
+            static const int8_t lut[16] = {
+                0,  +1,  -1,   0,
+                -1,  0,   0,  +1,
+                +1,  0,   0,  -1,
+                0,  -1,  +1,   0
+            };
+            return lut[(prev &lt;&lt; 2) | next];
+        }
+
+        static inline void Encoder_EXTI_Service(void) {
+            uint8_t a = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) ? 1 : 0;
+            uint8_t b = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1) ? 1 : 0;
+            uint8_t next = (a &lt;&lt; 1) | b;
+
+            int8_t d = quad_step(prev_state, next);
+            prev_state = next;
+            encoder_count += d;
+        }
+
+        // IRQs (CubeMX names)
+        void EXTI0_IRQHandler(void) {
+            HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
+        }
+        void EXTI1_IRQHandler(void) {
+            HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
+        }
+
+        void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+            if (GPIO_Pin == GPIO_PIN_0 || GPIO_Pin == GPIO_PIN_1) {
+                Encoder_EXTI_Service();
+            }
+        }"</code></pre>
+<p>This code did not compile. I pasted some of the errors in, and the chatpot responded that it forgot to add in the line:</p>
+<pre><code>    "GPIO_InitTypeDef gi = {0};"</code></pre>
+<p>Only like this would the gi.xx have any reference to a struct. This addition still didnt compile, because it forgot to give me a header with:</p>
+<pre><code>    "#include stm32l4xx_hal_gpio.h"</code></pre>
+<p>I was a bit surprised by these mistakes, but I think the Chatbot just assumed I already had those header files somewhere.</p>
 
 
 </section>
