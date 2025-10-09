@@ -23,49 +23,52 @@ The basis for encoding of detected pulses was taken from the [STM32L4xxxx Refere
 
 Each current and previous value was recorded, and the resulting contribution to the total number of pulses derived. To do so, the following two tables were written out.
 
-![Figure 1: General Inspiration of Lab 3 Design](images/generalidea.png){width=60% fig-align="center"}
+##### Previous and Current Encoder Values
+::: {#Encoder layout-ncol=2}
+![Figure 1a: Oscilloscope Trace using Interrupt Method](images/binaryfsm.png){width=30%}
+
+![Figure 1b: Converted to Decimal](images/decimalfsm.png){width=30%}
+:::
 
 These detailed processing was executed through a case statement in C. 
 
-SHOW VERIFICATION CALCULATIONS!!!!!!!
+Calculations to verify this implementation are shown below. The frequency of pulses was found through an oscilloscope, and the velocity was backward counted from there by hand. The result was compared to what was found in Segger.
+
+![Figure 3: Velocity Calculations](images/calculations.png){fig-align="center"}
 
 ### Interrupt Diagram
 
 The below diagram illustrates the main steps of the program and different function calls that execute with the enabled interrupts.
 
-![Figure 2: Interrupt Flowchart](images/flowchart.png){width=60% fig-align="center"}
+![Figure 3: Interrupt Flowchart](images/flowchart.png){width=60% fig-align="center"}
 
 ### Schematic
 
 The below schematic illustrates the simple setup for this design.
 
-![Figure 3: Schematic](images/schematic.png){width=60% fig-align="center"}
+![Figure 4: Schematic](images/schematic.png){width=60% fig-align="center"}
 
 ### Results and Discussion
 This project successfully demonstrated the ability and efficacy of an interrupt protocol to act immediately.
 
 In order to further investigate the reduction in latency by implementing an interrupt scheme, similar code was run using a polling method, where the GPIO pins were simply scanned. The differences were observed over an oscilloscope. Traces of the input pulse signals from the encoder are visible in both. An "acknowledged" signal is also put on the scope, for both implementations. 
 
+##### Polling Oscilloscope Traces
 ::: {#Polling layout-ncol=2}
+![Figure 5a: Oscilloscope Trace using Polling Method](images/polling.png)
 
-![Oscilloscope Trace using Polling Method](polling.png)
-
-![Zoomed in](pollingzoom.png)
-
-Polling Oscilloscope Traces
+![Figure 5b: Zoomed in](images/pollingzoom.png)
 :::
 
-
+##### Interrupt Oscilloscope Traces
 ::: {#Interrupt layout-ncol=2}
+![Figure 6a: Oscilloscope Trace using Interrupt Method](images/interrupt.png)
 
-![Oscilloscope Trace using Interrupt Method](interrupt.png)
-
-![Zoomed in](interruptzoom.png)
-
-Interrupt Oscilloscope Traces
+![Figure 6b: Zoomed in](images/interruptzoom.png)
 :::
 
 As can be seen, the polling method- which required 200 ms of delay- missed a large amount of the pulses in processing the realized pulse. As a result, the velocity was grossly miscalculated. On the other hand, the interrupt method is demonstrated to capture both the rising and falling edge of the single encoder pulse. Therefore- especially at high speeds- the performance of a manual polling method is much poorer than that of an interrupt implementation.
+
 
 ### Conclusion
 This design was a successful implementation of a quadrature encoder. The reported velocity is precise for a variety of reasons. For one, the system is very responsiveness due to the configured interrupts. The high resolution provided by four edge detection provides more precision, as well as the 10 Hz update rate, and the reporting of velocity to four decimal points. 
