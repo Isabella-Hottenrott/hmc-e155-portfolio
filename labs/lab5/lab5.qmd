@@ -71,7 +71,7 @@ As can be seen, the polling method- which required 200 ms of delay- missed a lar
 
 
 ### Conclusion
-This design was a successful implementation of a quadrature encoder. The reported velocity is precise for a variety of reasons. For one, the system is very responsiveness due to the configured interrupts. The high resolution provided by four edge detection provides more precision, as well as the 10 Hz update rate, and the reporting of velocity to four decimal points. 
+This design was a successful implementation of a quadrature encoder. The reported velocity is precise for a variety of reasons. For one, the system is very responsiveness due to the configured interrupts. The high resolution provided by four edge detection provides more precision, as well as the 10 Hz update rate, and the reporting of velocity to four decimal points. This lab took me 11 hours. 
 
 ### AI Prototype Summary
 I prompted ChatGPT5 with the following:
