@@ -34,7 +34,7 @@ These detailed processing was executed through a case statement in C.
 
 Calculations to verify this implementation are shown below. The frequency of pulses was found through an oscilloscope, and the velocity was backward counted from there by hand. The result was compared to what was found in Segger.
 
-![Figure 3: Velocity Calculations](images/calculations.png){width= 60% fig-align="center"}
+![Figure 3: Velocity Calculations](images/calculations.png){width=60% fig-align="center"}
 
 ### Interrupt Diagram
 
