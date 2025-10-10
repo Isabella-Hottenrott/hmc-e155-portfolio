@@ -296,7 +296,7 @@ Velocity =
 </div>
 </div>
 </div>
-<p>As can be seen, the polling method- which required 200 ms of delay- missed a large amount of the pulses in processing the realized pulse. As a result, the velocity was grossly miscalculated. On the other hand, the interrupt method is demonstrated to capture both the rising and falling edge of the single encoder pulse. Therefore- especially at high speeds- the performance of a manual polling method is much poorer than that of an interrupt implementation.</p>
+<p>As can be seen, the polling method- which required 200 ms of delay- missed a large amount of the pulses in processing the realized pulse. As a result, the velocity was grossly miscalculated. On the other hand, the interrupt method is demonstrated to capture both the rising and falling edge of the single encoder pulse. Therefore- especially at high speeds- the performance of a manual polling method is much poorer than that of an interrupt implementation. I found there to be a latency of 40 uS for the interrupt approach. Therefore, the maximum frequency of pulses that the encoder can report is 40 MHz. Therefore, the maximum angular frequency is 24.5 kHz. Using the polling approach, my encoder delays 200ms, so the maximum frequency of pulses is 5 Hz.</p>
 </section>
 </section>
 <section id="conclusion" class="level3">
