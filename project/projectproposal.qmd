@@ -3,7 +3,7 @@
 ### Project Description & Overview 
 The main objective of this project is to build a pattern-matching block game. A LCD, driven by the FPGA, will display a specified 2x2 pattern of icons, corresponding to physical blocks. Then, the player has to replicate that pattern on the game board. Over time, the period where the pattern is shown will decrease, increasing the difficulty of the game.
 
-The pattern the player produces will be detected by LiDAR. Each icon block will have a different depth, so that it will protrude to different lengths beneath the playing board. From underneath, a series of four LiDAR sensors will sense the distance between them and the bottom of the blocks, allowing the program to determine which block was placed were.
+The pattern the player produces will be detected by LiDAR. Each icon block will have a different depth, so that it will protrude to different lengths beneath the playing board. From underneath, a series of four LiDAR sensors will sense the distance to the bottom of the blocks, allowing the program to determine which block was placed where.
 
 If the player successfully matches the pattern, they move onto the next stage. If not, then they lose! This project has two main physical components: (1) LiDAR and (2) the LCD.
 
@@ -11,48 +11,72 @@ Ensuring the LiDAR sensor work is the most crucial element (poses the highest ri
 
 ### Block Diagram
 
-![Figure 1: Block Diagram](images/blockdiagram.png){width=50% fig-align="center"}
+![Figure 0: Block Diagram](images/blockdiagram.png){width=50% fig-align="center"}
 
 ### Schedule and Division of Work
 
-![Figure 2: Gantt Chart](images/ganttchart.png){width=50% fig-align="center"}
+![Figure 1: Schedule](images/schedule.png){fig-align="center"}
 
-To portion the work, we will first create a shared github so we always have access to our main body of work. We will each take a task, and update the exact task week-by-week. It is important that we both gain experience with the LCD and the LiDAR, so we will both be aware of the development of the code, but more insight is gained in the debugging stage, so that is where we will prioritize working together.  
+![Figure 2: Gantt Chart](images/ganttchart.png){fig-align="center"}
+
+To portion the work, we will first create a shared github so we always have access to our main body of work. We will each take a task, and update the exact task week-by-week. It is important that we both gain experience with the LCD and the LiDAR, to both have awareness of code development, but more insight is gained in the debugging stage, so that is where we will prioritize working together.  
+
 
 #### FPGA Design Details
 To meet the specifications, the FPGA will: 
-Show the desired pattern, and communicated from the MCU through SPI
-Flash that pattern for the desired amount of time (starting at 1 second and decreasing to 100 ms)
-Receive a variety of signals from the MCU, including Start/Reset, Win, Lose, and Level 
+
+Show the desired pattern, communicated from the MCU through SPI protocol
+
+No flashing/flickering– produces a steady image of the desired pattern, or Start/Win/Lose screens
+
+Display pattern for the desired amount of time (starting at 1 second and decreasing to 100 ms) and the countdown within 2% of correct/desired intervals
+
+Receive and process a variety of signals from the MCU, including Start/Reset, Win, Lose, and Level # via an FSM implemented in HDL
+
+Design fits on FPGA hardware
 
 If the FPGA receives a START signal, it will display the initialization screen, until it receives an update from the MCU. The MCU, after 5s, will send a signal indicating that the first level has started and the sequence it should display. Then, the FPGA will display this pattern for a designated amount of time. Then, the FPGA will display a timer counting down, indicating the amount of time the player has to put the pieces in the puzzle. After, it will send a signal to the MCU indicating it has finished its operations. To actually drive the display, the FPGA will use 10 pins, and send out the appropriate signals. It will utilize an FSM to correctly sequence the control signals. 
 
 FPGA Timing Calculations: Using the High Frequency Oscillator 
 We want the FPGA to measure 5s, 1s, and multiples of 100µS to control the display. We will use the 12 MHz HSOSC clock and therefore require the following counters:
 
-
 ![Figure 3: FPGA Timing Calculations](images/fpgatime.png){width=60% fig-align="center"}
 
 #### LCD Design Details
-The Liquic Crystal Display component has a 20x2 display, and a built-in Sitronix ST7066U controller. It needs 10 pins from the FPGA. Nine of those pins are used to transmit the character to be displayed, the 10th pin is used as an enable, and the 11th is used for the RS (register select) pin. It also needs 5V to power the logic, and up to 13V to power the LCD itself. 
+The Liquic Crystal Display component has a 20x2 display, and a built-in Sitronix ST7066U controller. It needs 10 pins from the FPGA. Nine of those pins are used to transmit the character to be displayed, the 10th pin is used as an enable, and the 11th is used for the RS (register select) pin . It also needs 5V to power the logic, and up to 13V to power the LCD itself. 
 
 ### MCU Design Details
 To meet specifications the MCU will:
+
 Properly sequence of stages in the game, including initialization
+
 Produce a randomly generated pattern for each round
+
 Read (time-multiplex) and verify the four LiDAR sensor inputs
+
+Only one LiDAR sensor is on at one time
+
+MCU correctly identifies which block is which
+
+LiDAR distance readings in within 8% of the true distance
+
+Only one pin used for i2c communication with all four sensors
+
+MCU timing reflects desired intervals
 
 The MCU will require 8 GPIO pins: 4 pins for LiDAR sensor XSHUT (one each), 1 pin for i2c communication with the LiDAR sensor, 1 pin for SPI communication with the FPGA, 1 pin for reset signal, 1 pin for PlayButton signal.
 
 Upon reset, the MCU will send a signal to the FPGA to display the “Start Game” display and run all initialization code. It will remain in a while loop until PlayButton is pressed. 
 Upon PlayButton, the MCU will count down 5 seconds and then generate a random pattern, sending this to the FPGA. The MCU will wait to receive a signal that the FPGA has displayed the pattern and allocated time for the player to place the blocks. 
+Upon receiving this signal, the MCU will time multiplex between the four LiDAR sensors using the XSHUT pins, and store their readings. The MCU and LiDAR sensors will communicate via i2c, using a 100 kbits/s data rate, which is well within the maximum of 400 kbits/s. The readings will be compared to the pattern sent to the FPGA. If the patterns match, the game advances and the MCU generates a new random pattern, sending this to the FPGA. If the patterns do not match, the MCU will send a signal to the FPGA to display the “You Lost” display. The MCU will count how many successful rounds the player has achieved. If the player reaches 10 rounds, it will send a signal to the FPGA to display the “You Win” display.
 
-Upon receiving this signal, the MCU will time multiplex between the four LiDAR sensors using the XSHUT pins, and store their readings. The readings will be compared to the pattern sent to the FPGA. If the patterns match, the game advances and the MCU generates a new random pattern, sending this to the FPGA. If the patterns do not match, the MCU will send a signal to the FPGA to display the “You Lost” display. The MCU will count how many successful rounds the player has achieved. If the player reaches 10 rounds, it will send a signal to the FPGA to display the “You Win” display.
 
+MCU Timing Calculations:
 For each sensor, we will follow the recommended 33 ms of reading time + 2 ms for extra buffer. The host will poll at 10 kHz for measurement status. With Sysclk = 80Mhz: PSC=79, ARR=99.
 
 ![Figure 4: MCU Timing Calculations](images/mcutime.png){fig-align="center"}
 
+MCU Distance Range Calculations:
 Using the recommended 33ms scan time while indoors with a white target, we are given that the standard deviation is 4%. Therefore, 95% of measurements will fall within ±8% of the true distance. We will account for this with the following margins.
 
 ![Figure 5: MCU Distance Margins](images/distmargins.png){fig-align="center"}
@@ -63,5 +87,16 @@ The Time-of-Flight (ToF) sensors are breakout boards housing the STM VL53L0X ToF
 
 
 ### Bill of Materials
+![Figure 6: Bill of Materials](images/billofmaterials.png){fig-align="center"}
 
-### Works Cited
+Hardware Specifications: 
+
+Sensors are fixed at bottom of the box 
+
+Minimal light interference
+
+Does not require recalibration between games 
+
+Game box is aesthetically inoffensive and does break
+
+Withstands frequent user handling
