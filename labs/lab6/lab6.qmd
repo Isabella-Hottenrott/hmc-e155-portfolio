@@ -25,7 +25,7 @@ The Rx and Tx lines for UART communication used pins in GPIO port A. To avoid an
 
 To verify that the configuration register was being accessed, and that SPI communciation was functional in the first place, the configuration register was read back after being written. A logical analyzer trace for this can be seen below. The first two bytes represent the configuration address and the proper configuration being written to the sensor, so the MISO output is irrelevant. The third byte represents the configuration read address being written to the sensor, so once again the MISO output is irrelevant. The final byte represents the configuration being written out from the temperature sensor, so the MOSI output is now irrelevant. As seen, the byte read out by the temperature sensor matches what was written two bytes prior.
 
-![Figure 0: SPI Transaction](images/spitransaction.png){width=60% fig-align="center"}
+![Figure 0: SPI Transaction](images/spitransaction.png){fig-align="center"}
 
 In order to convert the dual-register, signed two's complement representation of temperature into a decimal value that would properly convert negative numbers and significant figures, the values extracted from the registers were manipulated. The MSB was shifted right by 8 to discard the fractional bits returned by the read temperature function. The fractional bits were similarly extracted and multiplied by 1/16 to produce the proper fractional representation, since at 12-bit resolution, the LSB could measure up to 1/(2^4) = 1/16.
 The sum of these were then calculated, and cast into a float. This was then printed on the webpage.
@@ -34,7 +34,8 @@ To verify that negative temperatures could be handled, since no negative ambient
 ### Schematic
 
 The below schematic was implemented onto a breadboard for this design. 
-![Figure 1: Schematic](images/schematic.png){width=60% fig-align="center"}
+
+![Figure 1: Schematic](images/schematic.png){fig-align="center"}
 
 ### Results and Discussion
 
