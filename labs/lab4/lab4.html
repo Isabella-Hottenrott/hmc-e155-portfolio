@@ -159,6 +159,7 @@ window.Quarto = {
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#design-and-testing-methodology" id="toc-design-and-testing-methodology" class="nav-link" data-scroll-target="#design-and-testing-methodology">Design and Testing Methodology</a></li>
   <li><a href="#technical-documentation" id="toc-technical-documentation" class="nav-link" data-scroll-target="#technical-documentation">Technical Documentation</a></li>
+  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
   <li><a href="#block-diagram" id="toc-block-diagram" class="nav-link" data-scroll-target="#block-diagram">Block Diagram</a></li>
   <li><a href="#results-and-discussion" id="toc-results-and-discussion" class="nav-link" data-scroll-target="#results-and-discussion">Results and Discussion</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
@@ -265,14 +266,17 @@ Durdesired =
 <figcaption>Figure 5: Minimum and Maximum Duration Calculations</figcaption>
 </figure>
 </div>
-<p>The circuitry for the audio amplifier follows the suggested implementation from the <a href="https://www.ti.com/lit/ds/symlink/lm386.pdf">LM386 datasheet</a> Capacitors were placed in series to arrive at the 250µF value.</p>
+<p>I produced my own composition, following Bedrich Smetana’s “Vltava”. I referenced simple <a href="https://musescore.com/user/24439136/scores/6209183">sheet music</a> to produce the following <a href="https://github.com/Isabella-Hottenrott/e155-lab4/blob/GPIOfns/Vltava">fixed 2D array</a> of frequencies and durations.</p>
+</section>
+<section id="schematic" class="level3">
+<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+<p>The circuitry for the audio amplifier follows the suggested implementation from the <a href="https://www.ti.com/lit/ds/symlink/lm386.pdf">LM386 datasheet</a>. The following schematic was implemented in hardware.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/opamp.png" class="img-fluid figure-img"></p>
-<figcaption>Figure 6: LM386 with Gain = 20</figcaption>
+<p><img src="images/schematic.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 6: Schematic</figcaption>
 </figure>
 </div>
-<p>I produced my own composition, following Bedrich Smetana’s “Vltava”. I referenced simple <a href="https://musescore.com/user/24439136/scores/6209183">sheet music</a> to produce the following <a href="https://github.com/Isabella-Hottenrott/e155-lab4/blob/GPIOfns/Vltava">fixed 2D array</a> of frequencies and durations.</p>
 </section>
 <section id="block-diagram" class="level3">
 <h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
