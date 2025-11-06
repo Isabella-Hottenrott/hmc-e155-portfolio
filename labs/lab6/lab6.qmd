@@ -33,7 +33,7 @@ To verify that negative temperatures could be handled, since no negative ambient
 
 ### Schematic
 
-The below schematic was implemented onto a breadboard for this design. 
+The below schematic was implemented onto a breadboard for this design. A low pass filter was implemented on the MISO line due to observed clock coupling.
 
 ![Figure 1: Schematic](images/schematic.png){fig-align="center"}
 

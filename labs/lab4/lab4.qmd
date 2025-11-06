@@ -90,12 +90,14 @@ Using these findings, the minimum and maximum duration supported by the selected
 
  ![Figure 5: Minimum and Maximum Duration Calculations](images/minmaxdur.png){width=80% fig-align="center"}
 
-
-The circuitry for the audio amplifier follows the suggested implementation from the [LM386 datasheet](https://www.ti.com/lit/ds/symlink/lm386.pdf) Capacitors were placed in series to arrive at the 250µF value.
-
- ![Figure 6: LM386 with Gain = 20](images/opamp.png){fig-align="center"}
-
 I produced my own composition, following Bedrich Smetana's "Vltava". I referenced simple [sheet music](https://musescore.com/user/24439136/scores/6209183) to produce the following [fixed 2D array](https://github.com/Isabella-Hottenrott/e155-lab4/blob/GPIOfns/Vltava) of frequencies and durations.
+
+
+### Schematic
+
+The circuitry for the audio amplifier follows the suggested implementation from the [LM386 datasheet](https://www.ti.com/lit/ds/symlink/lm386.pdf). The following schematic was implemented in hardware.
+
+ ![Figure 6: Schematic](images/schematic.png){fig-align="center"}
 
 ### Block Diagram
 
