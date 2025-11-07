@@ -97,7 +97,9 @@ I produced my own composition, following Bedrich Smetana's "Vltava". I reference
 
 The circuitry for the audio amplifier follows the suggested implementation from the [LM386 datasheet](https://www.ti.com/lit/ds/symlink/lm386.pdf). The following schematic was implemented in hardware.
 
- ![Figure 6: Schematic](images/schematic.png){fig-align="center"}
+
+ ![Figure 6: Schematic](images/schemtaic.jpeg){width=70% fig-align="center"}
+
 
 ### Block Diagram
 
