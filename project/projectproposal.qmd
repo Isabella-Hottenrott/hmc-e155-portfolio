@@ -1,13 +1,10 @@
 # Project Proposal
 
 ### Project Description & Overview 
-The main objective of this project is to build a pattern-matching block game. A LCD, driven by the FPGA, will display a specified 2x2 pattern of icons, corresponding to physical blocks. Then, the player has to replicate that pattern on the game board. Over time, the period where the pattern is shown will decrease, increasing the difficulty of the game.
+The main objective of this project is to build a rock-paper scissors game, where a human player plays against the computer. A LED Dot Matrix, driven by the FPGA, will display the computer’s play (rock, paper, or scissors), as well as any other pertinent information (score, countdown, etc). The player’s move will be picked up by a series of 5 LiDAR sensors. 
+The five LiDAR sensors will be placed beneath the scanning platform and strategically positioned so that specific combinations of sensor activations correspond to particular game moves. The scanning platform will outline an area for players to position their hands, ensuring proper alignment and preventing misclassification of plays. Rock-paper-scissors provides three very distinct gestures 
+Ensuring the LiDAR sensors work is the most crucial element (poses the highest risk) to the success of this project. The LiDARs are the main sensing mechanism that interfaces with the outside world, and their placement must be strategically optimized to consistently ensure that a player’s move is recognized. The design must ensure correct and consistent height classifications for the hand placements across a range of moves and player profiles. The design should also account for occasional missed reflections due to off-angle surfaces. Moreover, according to our trade study, the VL53L0X sensors can interfere with each other’s readings, requiring the design to time multiplex between the five sensors in retrieving the distance data. 
 
-The pattern the player produces will be detected by LiDAR. Each icon block will have a different depth, so that it will protrude to different lengths beneath the playing board. From underneath, a series of four LiDAR sensors will sense the distance to the bottom of the blocks, allowing the program to determine which block was placed where.
-
-If the player successfully matches the pattern, they move onto the next stage. If not, then they lose! This project has two main physical components: (1) LiDAR and (2) the LCD.
-
-Ensuring the LiDAR sensor work is the most crucial element (poses the highest risk) to the success of this project. The LiDARs are the main sensing mechanism that interfaces with the outside world. According to our trade study, the VL53L0X sensors can interfere with each other’s readings, requiring the design to time multiplex between the four sensors in retrieving the distance data. Moreover, this design must ensure correct and consistent height classifications for the blocks. Occasional missed reflections due to off-angle surfaces or material properties will be another aspect that the design must account for.
 
 ### Block Diagram
 
@@ -19,7 +16,7 @@ Ensuring the LiDAR sensor work is the most crucial element (poses the highest ri
 
 ![Figure 2: Gantt Chart](images/ganttchart.png){fig-align="center"}
 
-To portion the work, we will first create a shared github so we always have access to our main body of work. We will each take a task, and update the exact task week-by-week. It is important that we both gain experience with the LCD and the LiDAR, to both have awareness of code development, but more insight is gained in the debugging stage, so that is where we will prioritize working together.  
+To portion the work, we will first create a shared github so we always have access to our main body of work. We will each take a task, and update the exact task week-by-week. It is important that we both gain experience with the LED Dot Matrix and the LiDAR, to both have awareness of code development, but more insight is gained in the debugging stage, so that is where we will prioritize working together.  
 
 
 #### FPGA Design Details
@@ -46,29 +43,15 @@ We want the FPGA to measure 5s, 1s, and multiples of 100µS to control the displ
 The Liquic Crystal Display component has a 20x2 display, and a built-in Sitronix ST7066U controller. It needs 10 pins from the FPGA. Nine of those pins are used to transmit the character to be displayed, the 10th pin is used as an enable, and the 11th is used for the RS (register select) pin . It also needs 5V to power the logic, and up to 13V to power the LCD itself. 
 
 ### MCU Design Details
-To meet specifications the MCU will:
-
-Properly sequence of stages in the game, including initialization
-
-Produce a randomly generated pattern for each round
-
-Read (time-multiplex) and verify the four LiDAR sensor inputs
-
-Only one LiDAR sensor is on at one time
-
-MCU correctly identifies which block is which
-
+To meet the specifications, the MCU will: 
+Implement the i2c protocol
+Read (time-multiplex) and verify the five LiDAR sensor inputs
+Turn only one LiDAR sensor on at a time
 LiDAR distance readings in within 8% of the true distance
-
 Only one pin used for i2c communication with all four sensors
-
 MCU timing reflects desired intervals
-
-The MCU will require 8 GPIO pins: 4 pins for LiDAR sensor XSHUT (one each), 1 pin for i2c communication with the LiDAR sensor, 1 pin for SPI communication with the FPGA, 1 pin for reset signal, 1 pin for PlayButton signal.
-
-Upon reset, the MCU will send a signal to the FPGA to display the “Start Game” display and run all initialization code. It will remain in a while loop until PlayButton is pressed. 
-Upon PlayButton, the MCU will count down 5 seconds and then generate a random pattern, sending this to the FPGA. The MCU will wait to receive a signal that the FPGA has displayed the pattern and allocated time for the player to place the blocks. 
-Upon receiving this signal, the MCU will time multiplex between the four LiDAR sensors using the XSHUT pins, and store their readings. The MCU and LiDAR sensors will communicate via i2c, using a 100 kbits/s data rate, which is well within the maximum of 400 kbits/s. The readings will be compared to the pattern sent to the FPGA. If the patterns match, the game advances and the MCU generates a new random pattern, sending this to the FPGA. If the patterns do not match, the MCU will send a signal to the FPGA to display the “You Lost” display. The MCU will count how many successful rounds the player has achieved. If the player reaches 10 rounds, it will send a signal to the FPGA to display the “You Win” display.
+The MCU will require 13 GPIO pins: 6 pins for LiDAR sensor XSHUT (one each), 1 pin for i2c communication with the LiDAR sensors, 4 pins for SPI communication with the FPGA, 1 pin for reset signal, 1 pin for PlayButton signal.
+Upon reset, the MCU will send a signal to the FPGA to display the “Start Game” display and send a reset signal to the FPGA. It will remain in a while loop until PlayButton is asserted. Upon PlayButton, the MCU will wait to receive a signal from the FPGA denoting that it should read the move the player asserted via LiDAR sensors, and then communicate the data collected to the FPGA. The game will continue until one party wins by achieving 3 wins.
 
 
 MCU Timing Calculations:
