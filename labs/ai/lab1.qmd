@@ -1,0 +1,49 @@
+## AI Prototype Lab 1
+
+
+The prompt that I provided the LLM was: "Write SystemVerilog HDL to leverage the internal high speed oscillator in the Lattice UP5K FPGA and blink an LED at 2 Hz. Take full advantage of SystemVerilog syntax, for example, using logic instead of wire and reg."
+
+In response, I received:
+
+    // Blink an LED at ~2 Hz using the iCE40UP5K internal HFOSC.
+    // Toolchains: Lattice Radiant/iCEcube2 or open-source (yosys/nextpnr-ice40).
+
+    module up5k_led_blink_2hz (
+        output logic led_o   // drive your LED pin (active-high assumed)
+    );
+
+    logic clk_12mhz;
+
+    SB_HFOSC u_hfosc (
+        .CLKHFEN (1'b1),   // enable output (assert after 100 µs PU time)
+        .CLKHFPU (1'b1),   // power-up oscillator
+        .CLKHF   (clk_12mhz)
+    );
+   
+    localparam int unsigned F_CLK_HZ = 12_000_000;
+    localparam int unsigned F_BLINK_HZ = 2;
+    localparam int unsigned TICKS_PER_TOGGLE = F_CLK_HZ / (2 * F_BLINK_HZ);
+
+    localparam int COUNTER_W = $clog2(TICKS_PER_TOGGLE);
+    logic [COUNTER_W-1:0] tick_cnt /* synthesis preserve */;
+
+    always_ff @(posedge clk_12mhz) begin
+        if (tick_cnt == TICKS_PER_TOGGLE-1) begin
+            tick_cnt <= '0;
+            led_o    <= ~led_o;       // toggle at 2 Hz
+        end else begin
+            tick_cnt <= tick_cnt + 1;
+        end
+    end
+
+    initial led_o = 1'b0;
+
+    endmodule
+
+
+
+When I attempted to synthesize this design, I thrown the error "instantiating unknown module SB_HFSOSC. VERI-1063". I typed the error message back into the LLM, and it corrected itself by instantiating the module "SB_HFOSC". The LLM had falsely named the Lattice iCE40/UP5K primitive of the on-board FPGA.
+
+I would overall rate the quality of the output poorly. I used ChatGPT 5 for this task, and would have expected it to not make such a basic and obvious mistake. The prompt asked to produce a very simple design, so I found it surprising that the LLM's output didn't synthesize on the first try. I also found the mistake surprising, because there should be a correlation between "iCE40/UP5K" and "SB_HFOSC", rather than "SB_HFSOSC" in the data that the chatbot used to create its answer. 
+
+Otherwise, the logic that the LLM created made sense, and the chatbot attempted to use local parameters and calculations to arrive at values necessary for the clock division. This makes the design modular.
