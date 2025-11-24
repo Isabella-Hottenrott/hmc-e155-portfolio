@@ -1,1 +1,81 @@
 ## AI Prototype Lab 5
+
+
+I prompted ChatGPT5 with the following:
+        "Write me interrupt handlers to interface with a quadrature encoder. I’m using the STM32L432KC, what pins should I connect the encoder to in order to allow it to easily trigger the interrupts?"
+
+In response, it provided me with the following:
+
+        "// Globals
+        static volatile int32_t encoder_count = 0;
+        static volatile uint8_t prev_state = 0;
+
+        // Call this during init (after HAL_Init and clocks).
+        static void Encoder_EXTI_Init(void) {
+            __HAL_RCC_GPIOA_CLK_ENABLE();
+
+            gi.Mode  = GPIO_MODE_IT_RISING_FALLING;  // fire on both edges
+            gi.Pull  = GPIO_PULLUP;                  // or GPIO_NOPULL if you have externals
+            gi.Speed = GPIO_SPEED_FREQ_LOW;
+
+            // Using PA0 (A) and PA1 (B). Change to whatever pins you chose.
+            gi.Pin = GPIO_PIN_0 | GPIO_PIN_1;
+            HAL_GPIO_Init(GPIOA, &gi);
+
+            // Read initial state
+            uint8_t a = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) ? 1 : 0;
+            uint8_t b = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1) ? 1 : 0;
+            prev_state = (a << 1) | b;
+
+            // Enable EXTI lines NVIC (EXTI0 for PA0, EXTI1 for PA1)
+            HAL_NVIC_SetPriority(EXTI0_IRQn, 5, 0);
+            HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
+            HAL_NVIC_SetPriority(EXTI1_IRQn, 5, 0);
+            HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+        } 
+        
+        // Returns +1, -1, or 0 based on transition
+            static inline int8_t quad_step(uint8_t prev, uint8_t next) {
+                // Index  (prev<<2)|next, values: 0, +1, -1, etc.
+                static const int8_t lut[16] = {
+                    0,  +1,  -1,   0,
+                    -1,  0,   0,  +1,
+                    +1,  0,   0,  -1,
+                    0,  -1,  +1,   0
+                };
+                return lut[(prev << 2) | next];
+            }
+
+            static inline void Encoder_EXTI_Service(void) {
+                uint8_t a = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) ? 1 : 0;
+                uint8_t b = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1) ? 1 : 0;
+                uint8_t next = (a << 1) | b;
+
+                int8_t d = quad_step(prev_state, next);
+                prev_state = next;
+                encoder_count += d;
+            }
+
+            // IRQs (CubeMX names)
+            void EXTI0_IRQHandler(void) {
+                HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
+            }
+            void EXTI1_IRQHandler(void) {
+                HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
+            }
+
+            void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+                if (GPIO_Pin == GPIO_PIN_0 || GPIO_Pin == GPIO_PIN_1) {
+                    Encoder_EXTI_Service();
+                }
+            }"
+
+This code did not compile. I pasted some of the errors in, and the chatpot responded that it forgot to add in the line:
+
+        "GPIO_InitTypeDef gi = {0};"
+Only like this would the gi.xx have any reference to a struct. This addition still didnt compile, because it forgot to give me a header with:
+
+        "#include stm32l4xx_hal_gpio.h"
+
+I was a bit surprised by these mistakes, but I think the Chatbot just assumed I already had those header files somewhere.
