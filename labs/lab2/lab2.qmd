@@ -37,7 +37,7 @@ The schematic shows the physical layout of the breadboard. Corresponding segment
 
 The on-board LEDs use 1 kΩ series resistors for current limiting. For each PNP transistor, the emitter is connected to 3.3 V, the collector is connected to the common anode of one digit, and the base is driven through a 460 Ω resistor from the FPGA output. This keeps the base current below 5 mA and within the FPGA’s current specifications.
 
-![Figure 3: Schematic of the Breadboard](images/schematic.jpeg){fig-align="center"}
+![Figure 3: Schematic of the Breadboard](images/schematic.png){fig-align="center"}
 
 ### Results and Discussion
 The design met all intended objectives. The DIP switches correctly drove the two hex digits, the binary sum displayed on the on-board LEDs matched the expected values, and the dual seven-segment display showed two stable, distinct hex values with no discernible flicker or bleeding.
