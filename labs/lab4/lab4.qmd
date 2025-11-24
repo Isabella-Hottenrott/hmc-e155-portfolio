@@ -1,11 +1,14 @@
 # Lab 4: Digital Audio
 
+[SOURCE CODE](https://github.com/Isabella-Hottenrott/e155-lab4)
+
 ### Introduction
 
-In this lab, two General Purpose Timers on the STM32L432KC Board were used to generate a square wave at a desired frequency and play Beethoven's "Für Elise" over a GPIO pin. This undertaking reqired understanding of many of the different components available on the STM32L432KC Board. To gain this understanding, the datasheet was parsed through. A circuit for low voltage audio amplification was also assembled to produce an audible output from a Jameco 8 Ohm Speaker and provide volume control.
+In this lab, two general-purpose timers on the STM32L432KC board were used to generate square waves at specified frequencies and play Beethoven’s Für Elise over a GPIO pin. This required understanding and configuring several on-chip peripherals using the STM32L432KC reference manual and datasheet. In addition, a low-voltage audio amplifier circuit was assembled to drive a Jameco 8 Ω speaker and provide volume control.
 
 ### Design and Testing Methodology
-For this design, the PLL was used to step the internal clock up to a frequency of 80 MHz. This was then configured as the system clock source. The APB2 and AHB2 buses were configured to receive the 80 MHz clock, as well, allowing the internal Timers and GPIO pins access to the signal. The two General Purpose Timers: TIM15 and TIM16 were used in this design. The timers were configured following the relationship between the prescaler and auto-reload register: 
+
+The internal clock was first multiplied using the PLL to obtain an 80 MHz system clock. This 80 MHz clock was then selected as the system clock source and routed onto the APB2 and AHB2 buses so that both the timers and GPIO peripherals could access it. Two general-purpose timers were used: TIM15 for frequency generation and TIM16 for note duration timing. Both timers were configured using the relationship between the prescaler (PSC), auto-reload register (ARR), and timer input clock.
 
 $$ 
 Fdesired = 
@@ -20,82 +23,56 @@ Durdesired =
 \frac{(4*(PSC + 1)*(ARR + 1))}{Ftim}
 $$
 
-A C for-loop iterated through a list of pitch-duration combinations that produced the score for "Für Elise". While TIM16- representing the duration- counted, TIM15- representing the frequency- toggled a GPIO pin for each note. These actions were accomplished based on the Update Interrupt Flag of the Status Register of each Timer.
+A C for loop iterated through an array of pitch–duration pairs encoding the score for Für Elise. For each entry:
+* TIM15 set the output frequency and toggled a GPIO pin at the desired note pitch.
+* TIM16 measured the corresponding note duration. 
 
+Both behaviors were driven by the update interrupt flag in the timers’ status registers (SR).
 
-The following  [desmos sheet](https://www.desmos.com/calculator/wdh4su2tgy) was used to verify the frequencies of the Timer 15 are correct. The ARR and PSC registers were recorded from Segger and tested as variables in the desmos to do so.
+The following  [desmos sheet](https://www.desmos.com/calculator/wdh4su2tgy) was used to verify the frequencies of the Timer 15 are correct. 
 
-The following  [desmos sheet](https://www.desmos.com/calculator/elzl4ktgfx) was used to verify the durations of the Timer 16 are correct. The ARR and PSC registers were recorded from Segger and tested as variables in the desmos to do so.
+The following  [desmos sheet](https://www.desmos.com/calculator/elzl4ktgfx) was used to verify the durations of the Timer 16 are correct.
 
-Two C functions: set_hz() and config_delay() were written to execute these configurations. These functions are run within the for-loop in main.c. 
+Two helper functions, set_hz() and config_delay(), encapsulated the frequency and duration configuration logic. These functions were called from within the main for loop in main.c.
 
-
-The GPIO bank B was initialized to toggle pin 6.
+The GPIO bank B was initialized to toggle pin 6 for audio output.
 
 ### Technical Documentation
-The "ACR" register was configured for FLASH configuration.
 
-The following RCC registers configured to set the PLL and system clock:
+After analyzing the reference manual and understanding what was required for this design, the following registers were configured.
 
-        CR
-        PLLCFGR
-        CFGR
-        APB2ENR
-        AHB2ENR
-
-The following GPIO registers configured to initializie GPIO Bank B and toggle pin 6:
-        
-        MODER
-        ODC
-
-The following TIM15 registers were configured to set Timer 15 as the frequency timer:
-        
-        PSC
-        EGR
-        CR1
-        ARR
-        SR
-        CNT
-
-The following TIM16 registers were configured to set Timer 16 as the delay timer:
-
-        PSC
-        EGR
-        CR1
-        ARR
-        SR 
-        CNT
+FLASH:          ACR
+RCC:            CR, PLLCFGR, CFGR, APB2ENR, AHB2ENR
+GPIO:           MODER, ODC
+TIM15:          PSC, EGR, CR1, ARR, SR, CNT
+TIM16:          PSC, EGR, CR1, ARR, SR, CNT
 
 The below calculations were used to determine an appropriate prescaler and auto-reload-register value:
 
-For the duration timer, a prescaler value of 1000 was selected. As a result, the TIM16_PSC register was loaded with the value of 999. Calculations for the ARR can be found in the following  [desmos sheet](https://www.desmos.com/calculator/wdh4su2tgy). The ARR values were calculated in real-time in the config_delay() function.
+The values for the PSC and ARR registers were selected using the considerations below.
 
-![Figure 0: Duration PSC and ARR calculations](images/pscarrdur.png){fig-align="center"}
+![Figure 1: Frequency PSC and ARR calculations](images/pscarr.png){fig-align="center"}
 
-For the frequency timer, a prescaler value of 20 was selected. As a result, the TIM15_PSC register was loaded with the value of 19. Calculations for the ARR can be found in the following  [desmos sheet](https://www.desmos.com/calculator/wdh4su2tgy). The ARR values were calculated in real-time in the set_hz() function.
+TIM16: A prescaler of 1\2000 was selected, so PSC was loaded with 1999. ARR values for the required note durations were computed at runtime inside config_delay() and verified using [desmos sheet](https://www.desmos.com/calculator/wdh4su2tgy).
 
-![Figure 1: Frequency PSC and ARR calculations](images/pscarrfreq.png){fig-align="center"}
+TIM 15: A prescaler of 20 was selected, so PSC was loaded with 19. ARR values for the required note frequencies were computed at runtime inside set_hz() and verified using [desmos sheet](https://www.desmos.com/calculator/wdh4su2tgy). 
 
 These values are proven to fall within 1% of the desired frequencies. The ARR values of the register were recorded over the Segger Registers window. These were used to derive the resulting frequency of the output signal. Calculations can be found using the following [desmos](https://www.desmos.com/calculator/ds1oxmomzv). All unique notes were tested.
 
  ![Figure 2: Frequency Percentage Deviation Calculation](images/percentdevdur.png){width=60% fig-align="center"}
 
-The minimum and maximum frequency supported by the selected prescaler and ARR can be found below:
+From these settings, the minimum and maximum achievable frequencies were derived:
 
  ![Figure 3: Minimum Frequency Calculations](images/minfreq.png){width=80% fig-align="center"}
 
   ![Figure 4: Maximum Frequency Calculations](images/maxfreq.png){width=80% fig-align="center"}
 
-Using these findings, the minimum and maximum duration supported by the selected prescaler and ARR can easily be found below:
-
- ![Figure 5: Minimum and Maximum Duration Calculations](images/minmaxdur.png){width=80% fig-align="center"}
-
-I produced my own composition, following Bedrich Smetana's "Vltava". I referenced simple [sheet music](https://musescore.com/user/24439136/scores/6209183) to produce the following [fixed 2D array](https://github.com/Isabella-Hottenrott/e155-lab4/blob/GPIOfns/Vltava) of frequencies and durations.
+In addition to Für Elise, a short custom composition playing a German Happy Birthday song was written. The following [fixed 2D array](https://github.com/Isabella-Hottenrott/e155-lab4/blob/GPIOfns/Vltava) of frequencies and durations was written.
 
 
 ### Schematic
 
-The circuitry for the audio amplifier follows the suggested implementation from the [LM386 datasheet](https://www.ti.com/lit/ds/symlink/lm386.pdf). The following schematic was implemented in hardware.
+The audio amplifier circuit followed the recommended configuration from the [LM386 datasheet](https://www.ti.com/lit/ds/symlink/lm386.pdf). The following schematic was implemented in hardware.
 
 
  ![Figure 6: Schematic](images/schemtaic.jpeg){width=70% fig-align="center"}
@@ -103,34 +80,19 @@ The circuitry for the audio amplifier follows the suggested implementation from 
 
 ### Block Diagram
 
-The following abstracted block diagram of the system can be used to understand the design:
+An abstracted block diagram of the overall system is shown below:
 
  ![Figure 7: Abstracted Block Diagram](images/blockdiagram.png){width=60% fig-align="center"}
 
 ### Results and Discussion
-This design was successfully able to play the desired pitches and durations of notes, piecing together Beethoven's "Für Elise". The associated circuitry was compact and easy to assemble.
-This design could have been undertaken in a different way, by producing a PWM signal at the Timer output. The timers could have also been configured to speak directly with the GPIO pins. I had initially attempted this path when going through the datasheet, but eventually had the idea of the current implementation. This implementation is faster and do not present timing issues at the frequencies being handled, so I decided to pursue this design instead.
+The design successfully generated the pitches and durations required to assemble Für Elise from individual notes. The audio amplifier circuit was compact, straightforward to assemble, and produced a clearly audible output on the 8 Ω speaker. For the modest frequency range used in this lab, the chosen timer configuration and GPIO toggling approach were simple, reliable, and did not introduce noticeable timing issues, so I decided to pursue this design.
 
 ### Conclusion
-Overall, this project was an opportunity to familiarize myself with the different functionalities of the STM32L432KC board, and how to navigate the Reference Manual and Datasheet. It was fun to compose a piece of my choice, as well.
-I spent 15 hours on this lab.
+
+This project provided hands-on experience with the STM32L432KC’s clock tree, general-purpose timers, GPIO configuration, and the process of navigating the reference manual and datasheet. It also offered a creative opportunity to implement and parameterize musical pieces—both a classical work and a custom composition—using low-level embedded C and on-chip peripherals.
 
 ### AI Prototype Summary
 
-I prompted the following LLM with the question:
+I provided the LLM with: "What timers should I use on the STM32L432KC to generate frequencies ranging from 220Hz to 1kHz? What’s the best choice of timer if I want to easily connect it to a GPIO pin? What formulae are relevant, and what registers need to be set to configure them properly?""
 
-What timers should I use on the STM32L432KC to generate frequencies ranging from 220Hz to 1kHz? What’s the best choice of timer if I want to easily connect it to a GPIO pin? What formulae are relevant, and what registers need to be set to configure them properly?
-
-It responded:
-
-        "TIM2 (32-bit general-purpose) — easiest and most flexible choice. It has multiple channel outputs you can route to GPIO pins (e.g., PA0/PA5/PA15 → TIM2_CH1 (AF1), PB3 → TIM2_CH2 (AF1), etc.).  ￼
-	•	TIM1 / TIM15–17 (16-bit) — also fine for PWM; TIM1 is “advanced” (needs MOE bit set) but you don’t need advanced features for simple tones. Device includes 1× advanced, 2× GP16, 1× GP32 per datasheet.  ￼
-	•	LPTIM1 / LPTIM2 (low-power timers) — great if you want the signal to keep running in Stop modes or be clocked from LSE/LSI, and they have an OUT pin you can map (e.g., PA4/PA8 → LPTIM2_OUT (AF14)). For simple “always-on” PWM they work well too.  ￼
-
-    Best simple choice for GPIO: TIM2 — 32-bit (so huge range/resolution), plentiful pin options (AF1 on several pins), and zero “advanced timer” gotchas.  ￼"
-
-
-Overall, the datasheet got the explicitly-mentioned functionalities of the onboard timer right. For the specific application, it was wrong in deciding that 32 bits would be necessary. It did not include configurations to the RCC that need to be made for the Timers. It also forgot to add anything about registers or calculations for the actual clock division.
-The LLM also pointed toward the low-power timers. This is not unreasonable, because it wasn't given any information on how long the timers would be active vs idle.
-After providing the LLM with the Reference Manual, it reaffirmed the decision to use Timer 2.
-Overall, I think going through the reference manual on my own is still a better use of time than taking the LLM output and debugging. I was a bit surprised about this, because I feel that there is enough online documentation for the LLM to output a more detailed response.
+The LLM's response, as well as my evaluation of the response, can be found [here](../ai/ai.qmd)

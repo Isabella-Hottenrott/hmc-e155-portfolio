@@ -18,6 +18,3 @@ title: "E155 Labs"
 
 ## Lab 6
 [Lab 6: The Internet of Things and Serial Peripheral Interface](lab6/lab6.qmd)
-
-## Lab 7
-[Lab 7: The Advanced Encryption Standard](lab7/lab7.qmd)

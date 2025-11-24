@@ -4,3 +4,5 @@ title: "Resources"
 ## Portfolio Resources
 - [E155 Course Website](https://hmc-e155.github.io/)
 - [E155 Github Repository](https://github.com/HMC-E155/hmc-e155)
+- [STM32L432KC Documentation](https://www.st.com/en/microcontrollers-microprocessors/stm32l432kc.html#documentation)
+- [Upduino Documentation](https://hmc-e155.github.io/assets/doc/FPGA-DS-02008-2-0-iCE40-UltraPlus-Family-Data-Sheet.pdf)

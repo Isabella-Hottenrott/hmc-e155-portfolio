@@ -1,24 +1,23 @@
 # Lab 1: FPGA and MCU Setup and Testing
 
+
+[SOURCE CODE](https://github.com/Isabella-Hottenrott/e155-lab1)
+
 ### Introduction
 
-In this lab, a design was implemented on the UPduino v3.1 FPGA to interface with and demonstrate the proper assembly of the E155 Development Board. This lab also exhibited the functionalities of the Dev Board's LEDs, the FPGA's on-board high-speed oscillator, and a Seven Segment Display.
+This lab implemented a simple design on the UPduino v3.1 FPGA to validate proper assembly and functionality of the E155 Development Board. This lab demonstrated correct operation of the development board’s LEDs, the FPGA’s on-board high-speed oscillator, and a seven-segment display.
 
 
 ### Design and Testing Methodology
-The iCE40 UltraPlus HSOSC primitive- an on-board high-speed oscillator- was used to generate a clock signal at 48 MHz. 
+The iCE40 UltraPlus HSOSC primitive was used to generate a clock signal at 48 MHz. A separate clock divider module was created to divide the HSOSC signal to a frequency of 2.4 Hz using a counter that reset every 10,000 counts, and providing a slow blink signal for an external LED.
 
-A separate clock divider module was created to divide the HSOSC signal to a frequency of 2.4 Hz using a counter that reset every 10,000 counts. This drove an external LED.
+Control logic for the remaining on-board LEDs consisted of simple combinational operations (XOR and AND) driven by the switch inputs.
 
-Logic to control the other two on-board LEDs included a simple XOR gate and AND gate between two sets of switches.
-
-To control the input to the Seven Segment Display, a priority encoder was used. The output signals were mapped to their respective pins on the input of the HDSP-511A Seven Segment Display. 3.3V were applied to the common anode of the display. 
-To turn a segment ON, the respective GPIO pin was grounded, producing a 3.3V drop across the segment's anode. The forward voltage of the segments' diodes is 1.95V. The current flowing through the diode was chosen to be 1mA. Therefore the value of the current limiting resistor placed in series between the cathode and GPIO pin was 1 kΩ. Calculations for this component value can be found below.
-
+A priority encoder was used to select which segment of the seven-segment display would illuminate. Its outputs were mapped to the pins of an HDSP-511A common-anode display. Each segment was activated by grounding its corresponding GPIO pin, producing the required 3.3 V drop across the diode. With a forward voltage of 1.95 V and a desired diode current of around 5 mA, 330 Ω series resistors were selected as current-limiting elements. The corresponding calculations are shown in Figure 1.
 
 ![Figure 1: Calculations for the current-limiting resistor values](images/resistor.png){width=50% fig-align="center"}
 
-To turn a segment OFF, the respective GPIO pin was set to 3.3V, producing no voltage drop across the segment, therefore allowing no current to flow.
+To deactivate a segment, the GPIO pin was driven high to eliminate voltage drop and prevent current flow.
 
 
 ### Technical Documentation
@@ -30,83 +29,40 @@ The source code for Lab 1 can be found in the following [GitHub repository](http
 
 ![Figure 2: Block Diagram of the lab1_ih verilog design](images/blockdiagram.png){width=60% fig-align="center"}
 
-The block diagram above illustrates the lab1_ih design. The top level module is called lab1_ih and takes the input s[3:0] and outputs led[2:0] and segs[6:0], communicating with the GPIO pins. Lab1_ih includes three submodules: the high-speed oscillator block (hf_osc), the seven segments priority encoder (segments), and the clock divider to 2.4 Hz (clock_div).
+The top-level module, lab1_ih, accepts switch inputs s[3:0] and drives outputs led[2:0] and segs[6:0]. It instantiates three submodules: the high-speed oscillator (hf_osc), the seven-segment priority encoder (segments), and the 2.4 Hz clock divider (clock_div).
 
 #### Schematic
 
 
-![Figure 3: Schematic of the Physical Circuit](images/schematic.png){width=50% fig-align="center"}
+![Figure 3: Schematic of the Physical Circuit](images/schematic.jpeg){width=50% fig-align="center"}
 
-
-The schematic above illustrates the physical layout on the breadboard. The diode cathodes from the seven segment display were connected in series with a 1 kΩ current-limiting resistor. Similarly, the on-board LEDs required 1 kΩ resistors to their limit current. Internal 100kΩ pull-up resistors were used to keep the active low SW7 from floating.
+The schematic illustrates the breadboard wiring, including the 300 Ω series resistors used to limit current to both the seven-segment display and the on-board LEDs. Internal 100 kΩ pull-ups ensured that the active-low switch (SW7) did not float.
 
 ### Results and Discussion
 
-This design met the intended objectives. All switches perform the intended logic, as can be demonstrated on the board by performing all switch combinations. Testbench simulations to verify the SystemVerilog design were produced for this lab. 
+The design met all functional objectives. Switch inputs produced the correct LED and seven-segment display behavior, verified both experimentally and through simulation. Testbenches were developed for all modules, confirming correct logic.
 
 ### Testbench Simulation
 
 ![Figure 5: Waveforms for tb_lab1_ih](images/tb_lab1_ih.png){fig-align="center"}
 
-Above are the waveforms produced by the testbench of the lab1_ih module. All possible combinations of input switch values were explicitly tested. The resulting led and single segment display were tested against expectations. The HSOSC primitive was imported into the testbench to verify funcitonality. No errors occured. 
+The lab1_ih testbench evaluated all combinations of switch inputs. Output waveforms for both the LEDs and the seven-segment display matched expected behavior. The HSOSC primitive was instantiated in simulation to validate clock-driven logic.
 
 ![Figure 6: Waveforms for tb_segments](images/tb_segments.png){fig-align="center"}
 
-Above are the waveforms produced by the testbench of the segments module. All possible combinations of input switch values were explicitly tested. The resulting single segment display outputs were tested against expectations. No errors occured. 
+The segments module testbench confirmed correct encoding for all input combinations. Segment outputs matched the expected one-hot activations.
 
 ![Figure 7: Waveforms for tb_clock_div](images/tb_clock_div.png){fig-align="center"}
 
-Above are the waveforms produced by the testbench of the clock_div module. A test oscillator was produced that ticked every 20,000,000 time stamps. This mimics the behavior of the clock divider, as the led is desired to oscillate at a 2.4 Hz frequency, or 20,000,000 times every edge of the 48 MHz HSOSC clock. 48 MHz/20,000,000 = 2.4 Hz. The test oscillator was compared to that produced by the clock_div module when fed in the testbench clock signal. Both oscillators can be seen to rise and fall simulataneously. No errors occured. 
+The clock_div testbench generated a model oscillator ticking every 20,000,000 simulation time units, corresponding to the intended 2.4 Hz blink frequency derived from a 48 MHz input clock. The divided clock output aligned precisely with the modeled reference.
+
 
 ### Conclusion
 
-The design successfully blinked an external LED using the on-board high-speed oscillator. Doing so demonstrated that the development board was properly assembled. I spent a total of twenty hours working on this lab. Producing the testbench redos took me an additional 2 hours.
+This lab successfully demonstrated correct operation of the UPduino v3.1 FPGA and the E155 Development Board. The design verified the board’s assembly, confirmed the functionality of the on-board HSOSC, and produced correct LED and seven-segment display behavior.
 
 ### AI Prototype Summary
 
 The prompt that I provided the LLM was: "Write SystemVerilog HDL to leverage the internal high speed oscillator in the Lattice UP5K FPGA and blink an LED at 2 Hz. Take full advantage of SystemVerilog syntax, for example, using logic instead of wire and reg."
 
-In response, it provided me with the following:
-
-    // Blink an LED at ~2 Hz using the iCE40UP5K internal HFOSC.
-    // Toolchains: Lattice Radiant/iCEcube2 or open-source (yosys/nextpnr-ice40).
-
-    module up5k_led_blink_2hz (
-        output logic led_o   // drive your LED pin (active-high assumed)
-    );
-
-    logic clk_12mhz;
-
-    SB_HFOSC u_hfosc (
-        .CLKHFEN (1'b1),   // enable output (assert after 100 µs PU time)
-        .CLKHFPU (1'b1),   // power-up oscillator
-        .CLKHF   (clk_12mhz)
-    );
-   
-    localparam int unsigned F_CLK_HZ = 12_000_000;
-    localparam int unsigned F_BLINK_HZ = 2;
-    localparam int unsigned TICKS_PER_TOGGLE = F_CLK_HZ / (2 * F_BLINK_HZ);
-
-    localparam int COUNTER_W = $clog2(TICKS_PER_TOGGLE);
-    logic [COUNTER_W-1:0] tick_cnt /* synthesis preserve */;
-
-    always_ff @(posedge clk_12mhz) begin
-        if (tick_cnt == TICKS_PER_TOGGLE-1) begin
-            tick_cnt <= '0;
-            led_o    <= ~led_o;       // toggle at 2 Hz
-        end else begin
-            tick_cnt <= tick_cnt + 1;
-        end
-    end
-
-    initial led_o = 1'b0;
-
-    endmodule
-
-
-
-When I attempted to synthesize this design, I thrown the error "instantiating unknown module SB_HFSOSC. VERI-1063". I typed the error message back into the LLM, and it corrected itself by instantiating the module "SB_HFOSC". The LLM had falsely named the Lattice iCE40/UP5K primitive of the on-board FPGA.
-
-I would overall rate the quality of the output poorly. I used ChatGPT 5 for this task, and would have expected it to not make such a basic and obvious mistake. The prompt asked to produce a very simple design, so I found it surprising that the LLM's output didn't synthesize on the first try. I also found the mistake surprising, because there should be a correlation between "iCE40/UP5K" and "SB_HFOSC", rather than "SB_HFSOSC" in the data that the chatbot used to create its answer. 
-
-Otherwise, the logic that the LLM created made sense, and the chatbot attempted to use local parameters and calculations to arrive at values necessary for the clock division. This makes the design modular.
+The LLM's response, as well as my evaluation of the response, can be found [here](../ai/ai.qmd)
