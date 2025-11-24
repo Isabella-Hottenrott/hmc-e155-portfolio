@@ -94,20 +94,20 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../blog.html"> 
-<span class="menu-text">Blog</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../labs/labs.html"> 
 <span class="menu-text">Labs</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../resources.html"> 
-<span class="menu-text">Resources</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../project.html"> 
 <span class="menu-text">Project</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/ai/ai.html"> 
+<span class="menu-text">AI Prototypes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../resources.html"> 
+<span class="menu-text">Resources</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -192,18 +192,19 @@ ul.task-list li input[type="checkbox"] {
 <section id="remaining-work-and-timeline" class="level2">
 <h2 class="anchored" data-anchor-id="remaining-work-and-timeline">Remaining Work and Timeline:</h2>
 <p>The remaining work can be broken down into four categories. The most important aspect is driving the display, as that will ensure the entire game can function, and then additional verification is needed to meet all of our specifications.</p>
-<pre><code>VL53L0X:
-    Ensure measured distances are correct 
-    Verify gesture recognition works with a variety of hands
-FPGA:
-    Implement game logic 
-    Drive display
-    Integrate use of ROM
-Display: 
-    Create all necessary display screens
-Physical Design:
-    Prototype physical components 
-    Integrate with ToF sensors </code></pre>
+<p>VL53L0X Sensors</p>
+<pre><code>•   Validate distance-measurement accuracy
+•   Verify robust gesture recognition across diverse hand sizes and poses</code></pre>
+<p>FPGA</p>
+<pre><code>•   Implement full game logic and state machine
+•   Drive the display pipeline (dot-matrix or LCD)
+•   Integrate ROM for precomputed patterns and assets</code></pre>
+<p>Display</p>
+<pre><code>•   Design and implement all required UI screens (moves, countdowns, scoring, etc.)</code></pre>
+<p>Physical Design</p>
+<pre><code>•   Prototype and refine mechanical components
+•   Integrate the scanning platform with time-of-flight sensors</code></pre>
+<p>⸻</p>
 <p>Firstly, we will focus on being able to drive our display, and then we will combine all of the various parts, debug, and ensure functionality. The display and game logic take priority, and will be completed before Thanksgiving break. The final touches will be completed during and after the break.</p>
 <p>Appendix: The code for the design at this point in time can be found in our e155-final-project repository, on the <a href="https://github.com/Isabella-Hottenrott/e155-final-project/tree/WinLoseDraw">WinLoseDraw Branch</a></p>
 

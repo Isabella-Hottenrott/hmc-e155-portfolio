@@ -123,20 +123,20 @@ window.Quarto = {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../blog.html"> 
-<span class="menu-text">Blog</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../../labs/labs.html"> 
 <span class="menu-text">Labs</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../resources.html"> 
-<span class="menu-text">Resources</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../../project.html"> 
 <span class="menu-text">Project</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../labs/ai/ai.html"> 
+<span class="menu-text">AI Prototypes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../resources.html"> 
+<span class="menu-text">Resources</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -178,16 +178,16 @@ window.Quarto = {
 <h1>Lab 5: Interrupts</h1>
 <section id="introduction" class="level3">
 <h3 class="anchored" data-anchor-id="introduction">Introduction</h3>
-<p>In this lab, interrupts were configured on the STM32L432KC Board to register all inputs of a quadrature encoder over a GPIO pin, and accurately report the angular velocity of a motor. A motor and attached quadrature encoder were powered and attached to the GPIO pins of the MCU. The interrupts were configured through writing to various registers, as well as an interrupt service routine coded in C. The inputs from the interrupts are passed through a decoding scheme that accounts for direction and potential debouncing or jitter, as detailed by the reference manual, to output a count of pulses from the Hall Effect encoder sensors. The decoded signals were sampled and entirely refreshed every 100ms, providing an accurate report of the motor’s velocity at a frequency of 10 Hz.</p>
+<p>In this lab, hardware interrupts were configured on the STM32L432KC to capture all transitions from a quadrature encoder and accurately report the angular velocity of a motor. A DC motor with an attached quadrature (Hall-effect) encoder was powered and wired to the MCU’s GPIO pins. Interrupts were enabled and configured via register programming and an interrupt service routine (ISR) written in C. The interrupt inputs were decoded using a scheme that accounts for rotation direction and potential debouncing or jitter (as described in the STM32L4 reference manual), producing a signed pulse count from the encoder channels. The decoded pulse count was sampled and reset every 100 ms, yielding a velocity estimate at 10 Hz.</p>
 </section>
 <section id="design-and-testing-methodology" class="level3">
 <h3 class="anchored" data-anchor-id="design-and-testing-methodology">Design and Testing Methodology</h3>
-<p>Research on the protocol of a quadrature encoder was undertaken in order to best understand the steps required to proceed. To produce the most precise report of velocity, encoder pulses were detected on both the rising and falling edges of both encoder A and B. This, as well as other register configurations like enabling the system clock, configuraing themas bits, and turning on the EXTI interrupt, were executed. The Nested Vector Interrupt Controller, as a result, is able to redirect any interrupts to their respective routines by saving the PC and loading the corresponding ISR into the PC. The ISRs are short and only turn on a flag, which is recognized in main.c and propagates the further calculations from there. Both GPIO pins are read, and their readings are encoded and processed to produce a pulse count. The processing draws inspiration from the TIM2 Encoder Interface Mode. From there, the velocity is calculated following the equation:</p>
+<p>Work began with a review of quadrature encoder operation to determine how best to detect direction and maximize measurement resolution. To obtain the most precise velocity estimate, the design detects encoder pulses on both rising and falling edges of both channels A and B, i.e., four edges per mechanical cycle. With the implemented configurations, the Nested Vector Interrupt Controller (NVIC) redirects any encoder edge to the appropriate ISR by saving the program counter and loading the ISR address into the PC. The ISRs themselves are intentionally short, only setting a flag and then returning. The main loop in main.c detects these flags, reads both GPIO pins, and performs the decoding and accumulation of pulses. The decoding logic is inspired by the TIM2 Encoder Interface Mode documented in the STM32L4 reference manual. From there, the velocity is calculated following the equation:</p>
 <p><span class="math display">\[
 Velocity =
 \frac{pulses * time}{1000*no.edges*PPR}
 \]</span></p>
-<p>As time is reported in milliseconds, the time/1000 component is multiplied into the velocity calculation. This implementation detects both rising and falling edges of the two encoders, so a total of four edges. The PPR of the encoder used in this design is 408 pulses per revolution. The velocity is reported every 100ms- so at a 10 Hz frequency- which is controlled by a timer, UPDATE_TIM. The code is written in a modular way such that switching to a report frequency of 1 Hz is simple and easy.</p>
+<p>As time is reported in milliseconds, the factor of time/1000 component converts to seconds in the denominator. The sampling interval is 100ms and the encoder has a PPER of 408 Pulses Per Revolution. The code is written in a modular way such that switching to a report frequency of 1 Hz is simple and easy.</p>
 </section>
 <section id="technical-documentation" class="level3">
 <h3 class="anchored" data-anchor-id="technical-documentation">Technical Documentation</h3>
@@ -222,7 +222,7 @@ Velocity =
 </div>
 </div>
 <p>These detailed processing was executed through a case statement in C.</p>
-<p>Calculations to verify this implementation are shown below. The frequency of pulses was found through an oscilloscope, and the velocity was backward counted from there by hand. The result was compared to what was found in Segger.</p>
+<p>To validate the implementation, the encoder pulse frequency was measured on an oscilloscope. The corresponding motor velocity was computed by hand from the measured frequency and compared to the velocity computed and displayed via the MCU in SEGGER. The results matched within the expected tolerance.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/calculations.png" class="img-fluid figure-img" style="width:60.0%"></p>
@@ -253,8 +253,8 @@ Velocity =
 </section>
 <section id="results-and-discussion" class="level3">
 <h3 class="anchored" data-anchor-id="results-and-discussion">Results and Discussion</h3>
-<p>This project successfully demonstrated the ability and efficacy of an interrupt protocol to act immediately.</p>
-<p>In order to further investigate the reduction in latency by implementing an interrupt scheme, similar code was run using a polling method, where the GPIO pins were simply scanned. The differences were observed over an oscilloscope. Traces of the input pulse signals from the encoder are visible in both. An “acknowledged” signal is also put on the scope, for both implementations.</p>
+<p>This project successfully demonstrated the responsiveness and accuracy achievable with an interrupt-based interface to a quadrature encoder.</p>
+<p>To quantify the benefit of interrupts, a second version of the code was implemented using polling: the GPIO pins were periodically sampled in software with a 200 ms delay. The two approaches were compared on an oscilloscope:</p>
 <section id="polling-oscilloscope-traces" class="level5">
 <h5 class="anchored" data-anchor-id="polling-oscilloscope-traces">Polling Oscilloscope Traces</h5>
 <div id="Polling" class="quarto-layout-panel" data-layout-ncol="2">
@@ -300,86 +300,24 @@ Velocity =
 </div>
 </div>
 </div>
-<p>As can be seen, the polling method- which required 200 ms of delay- missed a large amount of the pulses in processing the realized pulse. As a result, the velocity was grossly miscalculated. On the other hand, the interrupt method is demonstrated to capture both the rising and falling edge of the single encoder pulse. Therefore- especially at high speeds- the performance of a manual polling method is much poorer than that of an interrupt implementation. I found there to be a latency of 40 uS for the interrupt approach. Therefore, the maximum frequency of pulses that the encoder can report is 40 MHz. Therefore, the maximum angular frequency is 24.5 kHz. Using the polling approach, my encoder delays 200ms, so the maximum frequency of pulses is 5 Hz.</p>
+<p>With the polling approach (200 ms delay), the MCU missed a large fraction of the encoder pulses. As a result, the velocity estimate was significantly underestimated, especially at higher motor speeds. With the interrupt-based approach, both the rising and falling edges of each encoder pulse were captured. The measured latency from an encoder edge to the “acknowledge” toggle was approximately 40 uS for the interrupt approach. Therefore, the maximum frequency of pulses that the encoder can report is 24.5 kHz. Using the polling approach, my encoder delays 200ms, so the maximum frequency of pulses is 5 Hz.</p>
 </section>
 </section>
 <section id="conclusion" class="level3">
 <h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
-<p>This design was a successful implementation of a quadrature encoder. The reported velocity is precise for a variety of reasons. For one, the system is very responsiveness due to the configured interrupts. The high resolution provided by four edge detection provides more precision, as well as the 10 Hz update rate, and the reporting of velocity to four decimal points. This lab took me 11 hours.</p>
+<p>This design successfully implemented a quadrature encoder interface on the STM32L432KC using external interrupts. The reported velocity is precise for several reasons:</p>
+<ul>
+<li>The system responds quickly to edges due to the interrupt-based design.</li>
+<li>Both channels and both edges are used, providing high effective resolution.</li>
+<li>The 10 Hz update rate strikes a good balance between responsiveness and stability.</li>
+<li>Velocity is computed with sufficient precision to capture small changes in speed.</li>
+</ul>
+<p>Together, these choices yielded an accurate measurement of motor angular velocity and highlighted the advantages of interrupts over simple polling in embedded systems.</p>
 </section>
 <section id="ai-prototype-summary" class="level3">
 <h3 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h3>
 <p>I prompted ChatGPT5 with the following: “Write me interrupt handlers to interface with a quadrature encoder. I’m using the STM32L432KC, what pins should I connect the encoder to in order to allow it to easily trigger the interrupts?”</p>
-<p>In response, it provided me with the following:</p>
-<pre><code>    "// Globals
-    static volatile int32_t encoder_count = 0;
-    static volatile uint8_t prev_state = 0;
-
-    // Call this during init (after HAL_Init and clocks).
-    static void Encoder_EXTI_Init(void) {
-        __HAL_RCC_GPIOA_CLK_ENABLE();
-
-        gi.Mode  = GPIO_MODE_IT_RISING_FALLING;  // fire on both edges
-        gi.Pull  = GPIO_PULLUP;                  // or GPIO_NOPULL if you have externals
-        gi.Speed = GPIO_SPEED_FREQ_LOW;
-
-        // Using PA0 (A) and PA1 (B). Change to whatever pins you chose.
-        gi.Pin = GPIO_PIN_0 | GPIO_PIN_1;
-        HAL_GPIO_Init(GPIOA, &amp;gi);
-
-        // Read initial state
-        uint8_t a = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) ? 1 : 0;
-        uint8_t b = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1) ? 1 : 0;
-        prev_state = (a &lt;&lt; 1) | b;
-
-        // Enable EXTI lines NVIC (EXTI0 for PA0, EXTI1 for PA1)
-        HAL_NVIC_SetPriority(EXTI0_IRQn, 5, 0);
-        HAL_NVIC_EnableIRQ(EXTI0_IRQn);
-
-        HAL_NVIC_SetPriority(EXTI1_IRQn, 5, 0);
-        HAL_NVIC_EnableIRQ(EXTI1_IRQn);
-    } 
-    
-    // Returns +1, -1, or 0 based on transition
-        static inline int8_t quad_step(uint8_t prev, uint8_t next) {
-            // Index  (prev&lt;&lt;2)|next, values: 0, +1, -1, etc.
-            static const int8_t lut[16] = {
-                0,  +1,  -1,   0,
-                -1,  0,   0,  +1,
-                +1,  0,   0,  -1,
-                0,  -1,  +1,   0
-            };
-            return lut[(prev &lt;&lt; 2) | next];
-        }
-
-        static inline void Encoder_EXTI_Service(void) {
-            uint8_t a = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) ? 1 : 0;
-            uint8_t b = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1) ? 1 : 0;
-            uint8_t next = (a &lt;&lt; 1) | b;
-
-            int8_t d = quad_step(prev_state, next);
-            prev_state = next;
-            encoder_count += d;
-        }
-
-        // IRQs (CubeMX names)
-        void EXTI0_IRQHandler(void) {
-            HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
-        }
-        void EXTI1_IRQHandler(void) {
-            HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
-        }
-
-        void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-            if (GPIO_Pin == GPIO_PIN_0 || GPIO_Pin == GPIO_PIN_1) {
-                Encoder_EXTI_Service();
-            }
-        }"</code></pre>
-<p>This code did not compile. I pasted some of the errors in, and the chatpot responded that it forgot to add in the line:</p>
-<pre><code>    "GPIO_InitTypeDef gi = {0};"</code></pre>
-<p>Only like this would the gi.xx have any reference to a struct. This addition still didnt compile, because it forgot to give me a header with:</p>
-<pre><code>    "#include stm32l4xx_hal_gpio.h"</code></pre>
-<p>I was a bit surprised by these mistakes, but I think the Chatbot just assumed I already had those header files somewhere.</p>
+<p>The LLM’s response, as well as my evaluation of the response, can be found <a href="../../labs/ai/ai.html">here</a></p>
 
 
 </section>

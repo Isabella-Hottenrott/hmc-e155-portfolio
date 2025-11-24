@@ -94,20 +94,20 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../blog.html"> 
-<span class="menu-text">Blog</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../../labs/labs.html"> 
 <span class="menu-text">Labs</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../resources.html"> 
-<span class="menu-text">Resources</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../../project.html"> 
 <span class="menu-text">Project</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../labs/ai/ai.html"> 
+<span class="menu-text">AI Prototypes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../resources.html"> 
+<span class="menu-text">Resources</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -148,26 +148,42 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="lab-3-keypad-scanner" class="level1">
 <h1>Lab 3: Keypad Scanner</h1>
+<p><a href="https://github.com/Isabella-Hottenrott/e155-lab3">SOURCE CODE</a></p>
 <section id="introduction" class="level3">
 <h3 class="anchored" data-anchor-id="introduction">Introduction</h3>
-<p>In this lab, a design was implemented on the UPduino v3.1 FPGA board to display a continuous stream of hexadecimal inputs from a 4-by-4 matrix scanner onto a HDSP-521A dual segment LED display. The number of pins on the FPGA board limits this implementation to time-multiplex between the two output signals on the Dual Segment display, meaning much of the logic and breadboarding from Lab 2 was borrowed. The task of this lab must overcome two main challenges: one involving asynchronous inputs from a user, and the other involving “switch bouncing”.</p>
+<p>In this lab, a design was implemented on the UPduino v3.1 FPGA to scan a 4×4 matrix keypad and display a continuous stream of hexadecimal key presses on an HDSP-521A dual seven-segment LED display. Because of the limited number of FPGA pins, the design time-multiplexes the two digits. The lab addressed the challenges of handling asynchronous user inputs from the keypad and mitigating mechanical switch debouncing.</p>
 </section>
 <section id="design-and-testing-methodology" class="level3">
 <h3 class="anchored" data-anchor-id="design-and-testing-methodology">Design and Testing Methodology</h3>
-<p>To address these challenges prsented by this lab, my design thought process relied heavily on the E85 style of a “Datapath” and “Control Unit”. The “Datapath” deals with inputs, outputs, and operations on or intermediate storage of logic. The “Control Unit” is my FSM, and deals with the flow between “states” of my abstract implementation, sending and recieving control signals to the “Datapath” section to facilitate the proper advancement of logic. The rest of my logic was lots of combinational logic to encode signals relating the columns and rows. I used the HSOSC on-board high-speed oscillator to generate a 12 MHz clock signal that the design ran on. This signal was also divided to produce an second oscillator ticking at 60 Hz to allow for the time multiplexing of the display. 60 Hz is the frequency at which the human eye can no longer percieve refresh rates.</p>
+<p>To address these challenges, the design was separated into a Datapath and a Control Unit. The Datapath manages inputs, outputs, and intermediate storage and operations on signals. The Control Unit is a finite state machine (FSM) that coordinates the flow between abstract states, sending and receiving control signals to and from the Datapath.</p>
+<p>Additional combinational logic encodes the relationships between the keypad’s columns and rows. The on-board iCE40 UltraPlus HSOSC high-speed oscillator was configured to generate a 12 MHz clock. This clock drives the main logic, and is also divided down to 60 Hz for the display time-multiplexing. At 60 Hz, the human eye no longer perceives individual refresh events, which prevents visible flicker.</p>
 </section>
 <section id="technical-documentation" class="level3">
 <h3 class="anchored" data-anchor-id="technical-documentation">Technical Documentation</h3>
 <section id="verilog" class="level5">
 <h5 class="anchored" data-anchor-id="verilog">Verilog</h5>
-<p>As introduced in the previous section, the ideation for this design was inspired by the E85 separation of a “Controller” from a “Datapath”. The “Controller” of my design refers to the FSM, which is purely in charge of tracking ‘control’ signals and transitions between states. This idea is sketched up very generally in the image below.</p>
+<p>As introduced above, the design is structured around a Controller (FSM) and a Datapath. The FSM is responsible solely for control signals and state transitions; it is implemented as a Moore machine, where outputs depend only on the current state.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/generalidea.png" class="img-fluid figure-img" style="width:60.0%"></p>
 <figcaption>Figure 0: General Inspiration of Lab 3 Design</figcaption>
 </figure>
 </div>
-<p>My FSM is composed of six states: State 0 (Scan), State 1 (Synch), State 2 (Debounce), State 3 (Checking), State 4 (Send), and State 5 (Release). It is a Moore Machine, meaning outputs only depend on current state. S0-&gt;S1 occurs when a row receives and input, S1-&gt;S2 occurs when the synchronizer is done, S2-&gt;S3 occurs when the douncer is done, S3-&gt;S4 occurs if the same button is still pressed, otherwise S3-&gt;S0 occurs. S4-&gt;S5 occurs no matter the input, and S5-&gt;S0 occurs once the button is released. The Finite State Machine can be seen in the figure below.</p>
+<p>My FSM is composed of six states:</p>
+<pre><code>    State 0 (Scan)
+    State 1 (Synch)
+    State 2 (Debounce) 
+    State 3 (Checking)
+    State 4 (Send)
+    State 5 (Release)</code></pre>
+<p>State transitions proceed as follows:</p>
+<pre><code>    0 → S1 when a row detects an input
+    S1 → S2 when the synchronizer asserts done
+    S2 → S3 when the debouncer asserts done
+    S3 → S4 if the same key is still pressed; otherwise S3 → S0
+    S4 → S5 unconditionally
+    S5 → S0 once the key is released</code></pre>
+<p>The Finite State Machine can be seen in the figure below.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/fsm.png" class="img-fluid figure-img" style="width:100.0%"></p>
@@ -177,40 +193,71 @@ ul.task-list li input[type="checkbox"] {
 <p>The output and next state logic is outlined in the table below.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/fsmtable.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="images/fsmtable.png" class="img-fluid figure-img" style="width:60.0%"></p>
 <figcaption>Figure 2: Output and Next State Logic</figcaption>
 </figure>
 </div>
-<p>The modules on the datapath facilitate the proper advancement of logic.</p>
-<p>The scancounter respresents the four columns by a two bit number. This module increments the two bit representation every rising edge of the clock, therefore sweeping through the four columns. The scancounter has a reset and enable signal.</p>
-<p>The synchronizer is represented as two registers that synchronize asynchronous signals to the clock. The synchronizer has an enable and reset, as well as a “done” signal that goes HIGH on the clock cycle that synchronization completes. Essentially, then, this module is composed of two “states”: the ‘active synchronizing’ state, and the ‘done synchronizing state’.</p>
-<p>The debouncer acts as a counter that, when enabled, increments every rising clock edge. If disabled, the counter is set to zero. Once the counter has reached 600,000 clock ticks, representing that 50 ms have passed based on a 12 MHz clock, it sends off a “done” signal. The debouncer has an enable and reset. Essentially, then, this module is also composed of two “states”: the ‘active debounce-counting’ state, and the ‘not counting state’.</p>
-<p>The seg_ff acts as a flip-flop that when enabled, first writes to segment 0, and then writes the old value of segment 0 to segment 1. This ensures that the most recent hex digit from the keypad is displayed on the right, and the previous digit is shown on the left. This flip flop has an enable and reset. When disabled, the segments are turned off.</p>
+<p>The Datapath modules implement the operations required to advance the logic under control of the FSM:</p>
+<section id="scancounter" class="level6">
+<h6 class="anchored" data-anchor-id="scancounter">scancounter</h6>
+<ul>
+<li>Represents the four keypad columns as a 2-bit value. On each rising clock edge (when enabled), it increments through the four column codes, effectively sweeping the active column. It supports enable and reset control signals.</li>
+</ul>
+</section>
+<section id="synchronizer" class="level6">
+<h6 class="anchored" data-anchor-id="synchronizer">synchronizer</h6>
+<ul>
+<li>Consists of two flip-flops used to synchronize asynchronous row inputs to the system clock. It has enable and reset inputs and asserts a done signal exactly when synchronization completes. Conceptually, it has two internal modes: “actively synchronizing” and “synchronization done.”</li>
+</ul>
+</section>
+<section id="debouncer" class="level6">
+<h6 class="anchored" data-anchor-id="debouncer">debouncer</h6>
+<ul>
+<li>Implements a counter that increments on each rising edge of the 12 MHz clock while enabled. When disabled, the counter resets to zero. After 600,000 clock cycles, representing 50 ms, the module asserts a done signal, indicating that the input has remained stable long enough to be considered debounced. Like the synchronizer, it effectively has two modes: “actively counting” and “idle.”</li>
+</ul>
+</section>
+<section id="seg_ff" class="level6">
+<h6 class="anchored" data-anchor-id="seg_ff">seg_ff</h6>
+<ul>
+<li>A flip-flop based module that, when enabled, updates the right-hand digit with the most recent key press and shifts the previous value to the left-hand digit. This ensures that the most recent hex digit appears on the right, and the previous digit on the left. When disabled, the segments are turned off. It supports enable and reset.</li>
+</ul>
+</section>
 </section>
 <section id="breadboard" class="level5">
 <h5 class="anchored" data-anchor-id="breadboard">Breadboard</h5>
-<p>Much of the breadboarding for this lab took from Lab 3, as the dual segment display needed to be time multiplexed and the same single set of GPIO pins was used.</p>
-<p>The HDSP-521A required a larger current draw than the FPGA can output, which was addressed by two 2N3906 PNP transistors. 330 Ω resistors were placed at the cathodes of the diodes to ensure a 3 mA current pull through the segment, over the (3.3 V - 0.25 Vce -1.85 Vf) = 1.2 V drop, when ON. Calculations for the current limiting resistors between the cathodes and GPIO pins can be found below.</p>
+<p>The HDSP-521A requires more current than the FPGA can source directly, so two 2N3906 PNP transistors were used to drive the digit anodes. Each segment cathode is connected through a 330 Ω resistor to the FPGA, chosen to provide approximately 3 mA of segment current over the effective drop:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/resistor.png" class="img-fluid figure-img" style="width:60.0%"></p>
 <figcaption>Figure 3: Resistor Calculation</figcaption>
 </figure>
 </div>
-<p>A 460 Ω resistor was placed between the transistor base and the GPIO pin to limit the current draw to under 5 mA through the base, as specified by the datasheet. Calculations for this component value can be found below.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/transbase.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption>Figure 4: Transistor Base Current Calculation</figcaption>
-</figure>
-</div>
-<p>To control the input to the Seven Segment Display, a priority encoder was used. The output signals were mapped to their respective pins on the input of the HDSP-521A Seven Segment Display.</p>
-<p>The Keypad has eight pins for the four columns and four rows, each connected to the breadboard. The pin encoding from Pin0 to Pin 8: is as follows {R0, C0, R3, R1, R2, C1, C2, C3}, where Rx represents a row and Cx represents a column. The columns are driven by the GPIO pins as active HIGH. The rows output to the GPIO pins, and are also conencted to 100 kΩ pull down resistors to avoid floating values.</p>
+<p>A 460 Ω resistor is placed between each transistor base and the corresponding GPIO pin to limit the base current to under 5 mA, as required by the device datasheet.</p>
+<p>The priority encoder converts the 4-bit hex values into the appropriate seven-segment patterns, which are mapped to the HDSP-521A input pins.</p>
+<p>The keypad has eight pins (four rows and four columns), wired as follows from Pin 0 to Pin 8: {R0, C0, R3, R1, R2, C1, C2, C3}, where Rx denotes a row and Cx denotes a column. The columns are driven active-high by FPGA GPIO pins. The rows are read by FPGA inputs and tied to 100 kΩ pull-down resistors to prevent floating values.</p>
 </section>
 </section>
 <section id="block-diagram" class="level3">
 <h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
-<p>The top level module of this project is called lab3_ih and takes in inputs: reset (from the dev Board), and inputrows (from the keypad). lab3_ih outputs four signals: cols (to the keypad), segmentOut (to the segmanet cathodes), anodeZeroOut (to the base of transistor 0), anodeOneOut (to the base of transistor 1). lab3_ih includes nine submodules: the high-speed oscillator block (hf_osc), the clock divider to 60 Hz (clock_div), the FSM (FSM), the Datapath (DataPath), two column/row to segment encoders (colrowseg(0/1)) and two seven segment encoders (segments(0/1)) for the zeroeth and first segments respectively, and an anode-selecting module (anodeselect). Within the DataPath module, there are five submodules as well. These include a module to scan through kepad columns (scancounter), a module to encode the columns (combcol), a module to synchronize potential asynchronous inputs (synchronizer), a module to eliminate the effects of switch mechanical bouncing (debouncer), and a module to output segments to the display such that the first entry is displayed on the right (seg_ff). The modules inside of DataPath.sv function mostly as versions of some form of counter of flop enable.</p>
+<p>The top-level module is lab3_ih with the following interface: * Inputs reset – from the development board inputrows – from the keypad row lines * Outputs cols – to the keypad column drivers segmentOut – to the shared segment cathodes anodeZeroOut – to the base of transistor 0 (digit 0) anodeOneOut – to the base of transistor 1 (digit 1)</p>
+<p>lab3_ih instantiates nine submodules:</p>
+<ol type="1">
+<li>hf_osc – high-speed oscillator primitive</li>
+<li>clock_div – divides 12 MHz down to 60 Hz for display multiplexing</li>
+<li>FSM – control unit implementing the six-state machine</li>
+<li>DataPath – encapsulating the datapath logic</li>
+<li>colrowseg0, colrowseg1 – column/row to segment encoders for each digit</li>
+<li>segments0, segments1 – seven-segment decoders for the two digits</li>
+<li>anodeselect – selects which digit’s anode is active based on the multiplexing clock</li>
+</ol>
+<p>Inside DataPath.sv, five additional submodules are instantiated:</p>
+<ul>
+<li>scancounter – cycles through keypad columns</li>
+<li>combcol – encodes the active column</li>
+<li>synchronizer – synchronizes row inputs to the clock domain</li>
+<li>debouncer – debounces mechanical switching</li>
+<li>seg_ff – updates and stores the two displayed hex digits</li>
+</ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/blockdiagram.png" class="img-fluid figure-img"></p>
@@ -220,7 +267,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="schematic" class="level3">
 <h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
-<p>The schematic above illustrates the physical layout on the breadboard for this project. Corresponding diode cathodes from the two seven segment displays were the same node (segment 1 A is the same node as segment 2 A, etc). These were connected in series with a 330 Ω current-limiting resistor to the GPIO pins. The on-board LEDs required 1 kΩ resistors to their limit current. The emitter of the transistor is powered by 3.3 V, while the collector goes straight to the segment anodes. The base of the PNP transistor is in series with a 460 Ω resistor such that less than 5mA of current is drawn from the GPIO pin, which lies within specs. The columns of the keypad are wired directly to their respective FPGA pins. The rows of the keypad are similarly wired directly to their respective FPGA pins, as well as 100 kΩ pull down resistors.</p>
+<p>The schematic shows the physical wiring on the breadboard: Corresponding cathodes from the two digits of the dual display share the same node (e.g., digit 1 segment A and digit 2 segment A). Each shared node is connected in series with a 330 Ω current-limiting resistor to a GPIO pin. The on-board LEDs use 1 kΩ resistors for current limiting. For each PNP transistor, the emitter is tied to 3.3 V, the collector drives the common anode of the segment anodes, and the base is in series with a 460 Ω resistor from a GPIO pin. Keypad columns are wired directly from FPGA GPIO outputs. Keypad rows are wired to FPGA GPIO inputs and additionally connected to 100 kΩ pull-down resistors.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/schematic.png" class="img-fluid figure-img"></p>
@@ -230,15 +277,14 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="results-and-discussion" class="level3">
 <h3 class="anchored" data-anchor-id="results-and-discussion">Results and Discussion</h3>
-<p>This design met the intended objectives. The testbenches created for the different modules all passed. The Dual LED Segment correctly displayed the inputted hexadecimal digits typed into the keypad. The system did not lock or get confused when an invalid, asynchronous, or mechanically-bounced input was punched in. The two digits were illuminated and distinct.</p>
-<p>The choice to debounce in the method that I selected has some tradeoffs. The 50 ms counter is a “hard-coded” method of debouncing, and not at all responsive to different degrees of mechanical bouncing. It treats all switch bounces equally, providing 50 ms to recover. An alternative to this choice could have been implementing a second FSM that tracked states of whether any button was pushed. Such a design choice could have taken intermediate feedback during a button press, creating a more tailored debouncing mechanism. This is more complicated and entails re-accepting row inputs during a button push, which raises the possibility that operations would continue instead of remaining frozen during a button press. Another implementation might have been using an RC low pass filter. This would have made debugging more complicated, because debouncing signals are no longer in Verilog, but instead manifest on the breadboard. Overall, I found my counter implementation to be the simplest while still sufficient.</p>
+<p>This design met the intended objectives. All module-level testbenches passed. The dual seven-segment display correctly showed the hex digits corresponding to keypad inputs. The system did not lock or get confused when an invalid, asynchronous, or mechanically-bounced input was punched in. The two digits were clearly illuminated and visually distinct, with no noticeable flicker.</p>
 </section>
 <section id="testbench-simulation" class="level3">
 <h3 class="anchored" data-anchor-id="testbench-simulation">Testbench Simulation</h3>
 <p>A testbench simulation was produced for every module in the design.</p>
 <section id="tb_lab3_ih" class="level4">
 <h4 class="anchored" data-anchor-id="tb_lab3_ih">tb_lab3_ih:</h4>
-<p>The testbench for lab3_ih can be found <a href="https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_lab3_ih.sv">here</a>. Seven different potential button presses were tested and proven to output the correct value. Some of these included corner cases, such as what happens when there is a double press, or what happens when second press is asserted while the first press is still held. Additionally, this testbench checked that columns didn’t continue to cycle when they weren’t supposed to. The input four bit row logic was specified, as well as the four bit column logic, allowing me to decipher which key was being pressed. The correct outputs, as well as the correct anode illumination, was verified in this testbench. No errors occured.</p>
+<p>The testbench for lab3_ih can be found <a href="https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_lab3_ih.sv">here</a>. Seven different button presses were tested and proven to output the correct value, including corner cases, such as what happens when there is a double press, or what happens when second press is asserted while the first press is still held. The testbench also verified that the column scan stops when expected, and that the row/column encoding matches the intended key. Correct segment outputs and anode control were observed. No errors occurred.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/tb_lab3_ihi.png" class="img-fluid figure-img"></p>
@@ -248,7 +294,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tb_datapath" class="level4">
 <h4 class="anchored" data-anchor-id="tb_datapath">tb_DataPath:</h4>
-<p>The testbench for the DataPath module can be found <a href="https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_DataPath.sv">here</a>. This testbench tested different possible inputs into the DataPath module. The testbench verified the output of all the different combinations of possible signal inputs from the FSM module, and accounted for the timing and cohesion of all the submodules contained within DataPath.sv. The different test cases attempted to demonstrate basic functionality, as well as target corner cases, such as when invalid entries were asserted. No errors occured.</p>
+<p>The testbench for the DataPath module can be found <a href="https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_DataPath.sv">here</a>. This testbench exercises different combinations of control signals from the FSM and verifies the timing and coherence of all DataPath submodules. It includes both typical use cases and corner cases (such as invalid inputs). No errors occurred.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/tb_datapathi.png" class="img-fluid figure-img"></p>
@@ -258,7 +304,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tb_fsm" class="level4">
 <h4 class="anchored" data-anchor-id="tb_fsm">tb_FSM:</h4>
-<p>The testbench for the FSM module can be found <a href="https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_FSM.sv">here</a>. This testbench tested all different possible combinations of inputs into the FSM module. The testbench extracted the state and next state of the system, to verify that these matched the expected state. Two whole cycles through the FSM were practised. No errors occured.</p>
+<p>The testbench for the FSM module can be found <a href="https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_FSM.sv">here</a>. All combinations of FSM inputs were tested. The testbench tracked both the current state and next state to ensure they matched the expected transitions. Two full cycles through the FSM were simulated. No errors occurred.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/tb_fsm.png" class="img-fluid figure-img"></p>
@@ -308,7 +354,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tb_debouncer" class="level4">
 <h4 class="anchored" data-anchor-id="tb_debouncer">tb_debouncer:</h4>
-<p>The testbench for the debouncer module can be found <a href="https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_debouncer.sv">here</a>. The enable logic for the debouncing was tested. It was also 600000 timestamps were required for the debouncing counter to expire. This equates to 50 ms when clk comes from the 12 MHz HSOSC. No errors occured.</p>
+<p>The testbench for the debouncer module can be found <a href="https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_debouncer.sv">here</a>. The testbench verifies the enable behavior of the debouncer and confirms that 600,000 clock cycles are required before the done signal asserts. At 12 MHz, this corresponds to 50 ms. No errors occurred.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/tb_debouncer.png" class="img-fluid figure-img"></p>
@@ -338,7 +384,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tb_synchronizer" class="level4">
 <h4 class="anchored" data-anchor-id="tb_synchronizer">tb_synchronizer:</h4>
-<p>The testbench for the synchronizer module can be found <a href="https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_synchronizer.sv">here</a>. Test cases were tested against the synchronizer module, ensuring that after two cycles, the correct logic was synchronized with the clock. Correct response to the enable signal was proven, as well as the correct assertion of a “done” signal. No errors occured.</p>
+<p>The testbench for the synchronizer module can be found <a href="https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/fpga/tb_synchronizer.sv">here</a>. This testbench confirms that, after two clock cycles, the asynchronous input is correctly synchronized to the clock domain. It also verifies the behavior of the enable input and the timing of the done signal. No errors occurred.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/tb_synchronizer.png" class="img-fluid figure-img"></p>
@@ -349,63 +395,18 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="conclusion" class="level3">
 <h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
-<p>This design successfully illuminated a Dual Seven Segment Display based on a stream of inputs from a 4x4 keypad, using time-multiplexed outpus. The design handled asynchronous inputs and mechanical boucning of switches. Proper component selection allowed for strong illumination of the display. I spent a total of 40 hours on this lab.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/scanner.jpeg" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Figure 18: Scanner in Action</figcaption>
+</figure>
+</div>
+<p>This design successfully scanned a 4×4 keypad and drove a dual seven-segment display using time-multiplexed outputs. It handled asynchronous inputs and mechanical switch bounce without lockup or misinterpretation, and the chosen components and operating points provided strong, consistent illumination. The architecture—separating FSM control from a structured Datapath—resulted in a modular design that was straightforward to test and verify.</p>
 </section>
 <section id="ai-prototype-summary" class="level3">
 <h3 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h3>
-<p>The first prompt that I provided the LLM was a monolithic prompts:</p>
-<pre><code>    "Target device: Lattice iCE40 UP5K FPGA with internal high-speed oscillator (~20 MHz).
-
-    Write synthesizable SystemVerilog to scan a 4x4 matrix keypad and display the last two hex keys pressed on a dual 7‑segment display. Implement:
-
-    A clock divider that derives a scan clock on the order of 100–200 Hz from the internal oscillator.
-    A keypad scanning controller that iterates one active‑low column at a time and samples active‑low rows, registering at most one key per press (debounce‑by‑design), ignoring additional presses while any key is held, and allowing a new registration only after release.
-    A top level that updates two hex digits (older and most recent) when a new key is registered and drives a time‑multiplexed two‑digit 7‑segment display without visible flicker and with balanced brightness.
-    Use idiomatic SystemVerilog (e.g., logic, always_ff, enumerated states for FSMs). Provide clean module boundaries and keep all state synchronous. Include brief comments explaining the design choices." </code></pre>
-<p>In return, I recieved the following design linked <a href="https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/AI/protoA.sv">here</a> that synthesized. This verilog produced a design with four FSM states. The instantiation of these states can be seen below. There was no FSM module specifically, and state transitions were scattered throughout the module. <img src="images/aiA.png" class="img-fluid quarto-figure quarto-figure-center" alt="Figure 18: AI Proto A Instantiation of States"> Otherwise, the commented logic provided by the LLM followed a path that made sense. The encodings for the segments were correct.</p>
-<p>Next, I prompted the LLM in a modular manner such that it would decompose FSMs. The first of these prompts was:</p>
-<pre><code>    "Target device: Lattice iCE40 UP5K FPGA.
-
-    Overall Goal: Write SystemVerilog to scan a 4x4 matrix keypad and display the last two hex keys pressed on a dual 7 segment display.
-
-    Current Goal: Write a synthesizable SystemVerilog module that produces a one‑shot registration signal for the keypad system. Behavior:
-
-    When a key press is first detected, capture the current key code and assert a single‑cycle “new key” pulse.
-    While any key remains pressed, do not accept additional keys.
-    Only after keys are released should a subsequent press be recognized.
-    This should handle debouncing of the keys.
-    Implement as a small synchronous FSM with enumerated states and glitch‑free outputs. Keep names and interfaces reasonable; do not assume any hidden modules beyond what you define here."</code></pre>
-<p>In return, I recieved the following design linked <a href="https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/AI/protoBi.sv">here</a> that synthesized.</p>
-<p>The second modular prompt was: “Target device: Lattice iCE40 UP5K FPGA.</p>
-<pre><code>    Write a synthesizable SystemVerilog module that cycles through keypad columns (active‑low, one at a time) and samples rows (active‑low) to detect a single key at a time. Behavior:
-
-    Iterate columns at a suitable scan rate derived from the divided clock and sample rows.
-    When a key is detected, report a stable key code consistent with a standard 4x4 keypad layout and maintain it while the key remains pressed.
-    Provide a boolean signal indicating whether any key is currently pressed.
-    Use clean state encoding and synchronous logic; avoid combinational feedback and latches."</code></pre>
-<p>In return, I recieved the following design linked <a href="https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/AI/protoBii.sv">here</a> that synthesized.</p>
-<p>The design decoded the columns and rows in a case statement, verbosely breaking down every column and row possibility. Immediately, the row and column combinations were converted into the hex value that was pressed.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/aiBii.png" class="img-fluid figure-img"></p>
-<figcaption>Figure 19: AI Proto Bii Breakdownof Columns and Rows</figcaption>
-</figure>
-</div>
-<p>The final of the modular prompts was: “Target device: Lattice iCE40 UP5K FPGA with internal oscillator as the root clock source.</p>
-<pre><code>    Write a top‑level SystemVerilog module that instantiates the scanner and one‑shot modules, shifts the last two keys (older ← most recent; most recent ← new), and drives a multiplexed two‑digit seven‑segment display. Requirements:
-
-    Update the displayed digits only when a new key is registered.
-    Ensure equal apparent brightness and no visible flicker.
-    Keep all logic synthesizable and synchronous; use idiomatic SystemVerilog constructs.
-    Provide any small clock‑enable or divider logic you need. You can also assume that a sevenSegment module exists that takes a 4 bit input and outputs the 7 segments."</code></pre>
-<p>In return, I recieved the following design linked <a href="https://github.com/Isabella-Hottenrott/e155-lab3/blob/main/AI/protoBiii.sv">here</a>.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/aiBiii.png" class="img-fluid figure-img"></p>
-<figcaption>Figure 20: AI Proto Biii Unsynthesizable Clock</figcaption>
-</figure>
-</div>
-<p>This was the first of the designs returned by the LLM that did not synthesize. Claude attempted to import the wrong High Frequency Oscillator, as shown in the image above.</p>
+<p>I provided the LLM three different prompts for this lab to see how it would perform depending on the content of the prompts.</p>
+<p>The LLM’s response, as well as my evaluation of the response, can be found <a href="../../labs/ai/ai.html">here</a></p>
 
 
 </section>
