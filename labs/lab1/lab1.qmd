@@ -34,7 +34,7 @@ The top-level module, lab1_ih, accepts switch inputs s[3:0] and drives outputs l
 #### Schematic
 
 
-![Figure 3: Schematic of the Physical Circuit](images/schematic.jpeg){width=50% fig-align="center"}
+![Figure 3: Schematic of the Physical Circuit](images/newschem.jpeg){width=50% fig-align="center"}
 
 The schematic illustrates the breadboard wiring, including the 300 Ω series resistors used to limit current to both the seven-segment display and the on-board LEDs. Internal 100 kΩ pull-ups ensured that the active-low switch (SW7) did not float.
 
