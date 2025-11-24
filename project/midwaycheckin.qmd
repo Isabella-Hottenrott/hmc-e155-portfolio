@@ -38,18 +38,28 @@ The FPGA drives three LEDS: The top one represents that the COMPUTER has WON. Th
 	
 The remaining work can be broken down into four categories. The most important aspect is driving the display, as that will ensure the entire game can function, and then additional verification is needed to meet all of our specifications. 
 
-	VL53L0X:
-        Ensure measured distances are correct 
-        Verify gesture recognition works with a variety of hands
-    FPGA:
-        Implement game logic 
-        Drive display
-        Integrate use of ROM
-    Display: 
-        Create all necessary display screens
-	Physical Design:
-        Prototype physical components 
-        Integrate with ToF sensors 
+VL53L0X Sensors
+
+	•	Validate distance-measurement accuracy
+	•	Verify robust gesture recognition across diverse hand sizes and poses
+
+FPGA
+
+	•	Implement full game logic and state machine
+	•	Drive the display pipeline (dot-matrix or LCD)
+	•	Integrate ROM for precomputed patterns and assets
+
+Display
+
+	•	Design and implement all required UI screens (moves, countdowns, scoring, etc.)
+
+Physical Design
+
+	•	Prototype and refine mechanical components
+	•	Integrate the scanning platform with time-of-flight sensors
+
+⸻
+
 
 Firstly, we will focus on being able to drive our display, and then we will combine all of the various parts, debug, and ensure functionality. The display and game logic take priority, and will be completed before Thanksgiving break. The final touches will be completed during and after the break. 
 

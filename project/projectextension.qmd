@@ -1,0 +1,8 @@
+# Project Extension
+
+After going down a little hole of watching Youtube videos about Neural Networks and playing with Hugging Face Notebooks over summer, I thought it could be cool to integrate electrical engineering and hardware.
+
+I have purchased and am waiting on my Himax CMOS Imaging Camera (HM01b0) to arrive. 
+I did not purchase the Himax HM01B0 Adapter Board for cost reasons. Because of this, I will have to configure communication between the camera and the FPGA board myself, as well as take whatever setup is necessary to get the CNN on my FPGA board, instead of flashing everything onto the adapter board. This deviates from the Demo, so I will have to figure out the solution on my own. The demo shield board also has Debug LEDs, which I will likely want to integrate into my own system.
+
+Further on, the neural network can be retrained to detect other gestures, which I might be interested to explore.
